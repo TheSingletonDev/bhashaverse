@@ -41,7 +41,7 @@ class Bhashaverse extends StatelessWidget {
           locale: const Locale('en'),
           translations: LocalizedContent(),
           title: 'Bhashaverse',
-          theme: ThemeData(colorScheme: lightColorScheme, useMaterial3: true),
+          theme: ThemeData(colorScheme: lightColorScheme),
           // darkTheme: ThemeData(colorScheme: darkColorScheme, useMaterial3: true),
           debugShowCheckedModeBanner: false,
           initialBinding: TranslationAppBindings(),
