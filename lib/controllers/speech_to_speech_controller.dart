@@ -227,13 +227,6 @@ class SpeechToSpeechController extends GetxController {
           isAtLeastOneDefaultModelTypeFound = true;
         }
       }
-    } else if (ai4BharatStreamModelName.isNotEmpty) {
-      for (var eachAvailableASRModelData in _languageModelController.availableASRModels.data) {
-        if (eachAvailableASRModelData.name.toLowerCase() == ai4BharatStreamModelName.toLowerCase()) {
-          availableASRModelsForSelectedLangInUIDefault.add(eachAvailableASRModelData.modelId);
-          isAtLeastOneDefaultModelTypeFound = true;
-        }
-      }
     } else if (ai4BharatBatchModelName.isNotEmpty) {
       for (var eachAvailableASRModelData in _languageModelController.availableASRModels.data) {
         if (eachAvailableASRModelData.name.toLowerCase() == ai4BharatBatchModelName.toLowerCase()) {
@@ -241,7 +234,16 @@ class SpeechToSpeechController extends GetxController {
           isAtLeastOneDefaultModelTypeFound = true;
         }
       }
-    } else if (ai4BharatModelName.isNotEmpty) {
+    }
+    // else if (ai4BharatStreamModelName.isNotEmpty) {
+    //   for (var eachAvailableASRModelData in _languageModelController.availableASRModels.data) {
+    //     if (eachAvailableASRModelData.name.toLowerCase() == ai4BharatStreamModelName.toLowerCase()) {
+    //       availableASRModelsForSelectedLangInUIDefault.add(eachAvailableASRModelData.modelId);
+    //       isAtLeastOneDefaultModelTypeFound = true;
+    //     }
+    //   }
+    // }
+    else if (ai4BharatModelName.isNotEmpty) {
       for (var eachAvailableASRModelData in _languageModelController.availableASRModels.data) {
         if (eachAvailableASRModelData.name.toLowerCase() == ai4BharatModelName.toLowerCase()) {
           availableASRModelsForSelectedLangInUIDefault.add(eachAvailableASRModelData.modelId);

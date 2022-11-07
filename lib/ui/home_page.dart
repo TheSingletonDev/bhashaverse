@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../config/app_constants.dart';
@@ -19,6 +20,10 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (!GetStorage().read('isIntroShown')) {
+      GetStorage().write('isIntroShown', true);
+    }
+    Get.find<LanguageModelController>().calcAvailableSourceAndTargetLanguages();
     return SafeArea(
       child: Scaffold(
         backgroundColor: AppConstants.STANDARD_WHITE,
