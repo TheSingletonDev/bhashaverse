@@ -42,7 +42,7 @@ class Bhashaverse extends StatelessWidget {
           translations: LocalizedContent(),
           title: 'Bhashaverse',
           theme: ThemeData(colorScheme: lightColorScheme, useMaterial3: true),
-          darkTheme: ThemeData(colorScheme: darkColorScheme, useMaterial3: true),
+          // darkTheme: ThemeData(colorScheme: darkColorScheme, useMaterial3: true),
           debugShowCheckedModeBanner: false,
           initialBinding: TranslationAppBindings(),
           home: const IntroPages(),
