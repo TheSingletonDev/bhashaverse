@@ -8,7 +8,6 @@ import 'package:google_fonts/google_fonts.dart';
 import '../config/app_constants.dart';
 import '../config/loacale_fonts.dart';
 import '../config/size_config.dart';
-import '../controllers/language_model_controller.dart';
 import 'home_page.dart';
 import 'widgets/info_btn.dart';
 import 'widgets/localization_btn.dart';
@@ -25,7 +24,6 @@ class IntroPagesState extends State<IntroPages> {
   final introKey = GlobalKey<IntroductionScreenState>();
 
   void _onIntroEnd(context) {
-    Get.find<LanguageModelController>().calcAvailableSourceAndTargetLanguages();
     Get.off(() => const HomePage());
   }
 

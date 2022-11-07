@@ -1,9 +1,11 @@
+import 'package:bhashaverse/ui/home_page.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 
 import 'bindings.dart';
 import 'config/localized_content.dart';
@@ -15,7 +17,7 @@ void main() {
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(statusBarColor: Colors.black87));
 
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]).then((_) {
-    runApp(const Bhashaverse());
+    GetStorage.init().then((_) => runApp(const Bhashaverse()));
   });
 }
 
@@ -37,6 +39,10 @@ class Bhashaverse extends StatelessWidget {
         lightColorScheme = ColorScheme.fromSeed(seedColor: baseColor);
         darkColorScheme = ColorScheme.fromSeed(seedColor: baseColor, brightness: Brightness.dark);
       }
+
+      if (GetStorage().read('isIntroShown') == null) {
+        GetStorage().write('isIntroShown', false);
+      }
       return GetMaterialApp(
           locale: const Locale('en'),
           translations: LocalizedContent(),
@@ -45,7 +51,7 @@ class Bhashaverse extends StatelessWidget {
           // darkTheme: ThemeData(colorScheme: darkColorScheme, useMaterial3: true),
           debugShowCheckedModeBanner: false,
           initialBinding: TranslationAppBindings(),
-          home: const IntroPages(),
+          home: GetStorage().read('isIntroShown') ? const HomePage() : const IntroPages(),
           builder: (context, child) {
             ScreenUtil.init(context, designSize: const Size(540, 1200), minTextAdapt: true);
 
