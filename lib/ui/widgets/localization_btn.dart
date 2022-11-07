@@ -2,6 +2,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../config/app_constants.dart';
@@ -38,6 +39,8 @@ class LangSwitchButton extends StatelessWidget {
                       onTap: () {
                         localizationController.changeLocalization(newLocale: newLocale);
                         localizationController.changeCurrentSelectedLocalizationLangInUI(eachLanguage);
+                        GetStorage().write('userSelectedLangCode', newLocale);
+                        GetStorage().write('userSelectedLang', eachLanguage);
                         // Delay for better User Experience. User tap shows a splash effect.
                         Future.delayed(const Duration(milliseconds: 300)).then((_) => Get.back());
                       },

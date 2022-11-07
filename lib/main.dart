@@ -43,8 +43,12 @@ class Bhashaverse extends StatelessWidget {
       if (GetStorage().read('isIntroShown') == null) {
         GetStorage().write('isIntroShown', false);
       }
+      if (GetStorage().read('userSelectedLangCode') == null) {
+        GetStorage().write('userSelectedLangCode', 'en');
+        GetStorage().write('userSelectedLang', 'English');
+      }
       return GetMaterialApp(
-          locale: const Locale('en'),
+          locale: Locale(GetStorage().read('userSelectedLangCode')),
           translations: LocalizedContent(),
           title: 'Bhashaverse',
           theme: ThemeData(colorScheme: lightColorScheme),
