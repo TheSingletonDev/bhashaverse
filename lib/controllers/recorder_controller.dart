@@ -70,6 +70,19 @@ class RecorderController extends GetxController {
     }
   }
 
+  // For Update Button only
+  Future updateTransAndTTSForAlreadyPresentASR() async {
+    try {
+      /* Cannot put this line of code marking it as true, 
+      inside sendSpeechToSpeechRequests method because that is coded only for Record button.
+      Marking false is put inside sendSpeechToSpeechRequests method to enable Update button back!!*/
+      _appUIController.changeHasSpeechToSpeechUpdateRequestsInitiated(hasSpeechToSpeechUpdateRequestsInitiated: true);
+      _speechToSpeechController.sendSpeechToSpeechRequests(base64AudioContent: _base64EncodedAudioContent);
+    } catch (e) {
+      _appUIController.changeIsUserRecording(isUserRecording: false);
+    }
+  }
+
   Future playback() async {
     await _audioPlayer.openPlayer();
     _appUIController.changeIsTTSOutputPlaying(isTTSOutputPlaying: true);

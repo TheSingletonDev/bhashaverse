@@ -43,9 +43,11 @@ class AppConstants {
   static const String IMAGE_ASSETS_PATH = 'assets/images/';
 
   static const String RECORD_BUTTON_TEXT = 'Record';
+  static const String STOP_BUTTON_TEXT = 'Stop';
+  static const String UPDATE_BUTTON_TEXT = 'Update';
+  static const String UPDATING_BUTTON_TEXT = 'Updating';
   static const String PLAY_BUTTON_TEXT = 'Play';
   static const String PLAYING_BUTTON_TEXT = 'Playing';
-  static const String STOP_BUTTON_TEXT = 'Stop';
   static const String SPEECH_TO_TEXT_HEADER_LABEL = 'SPEECH TO TEXT';
   static const String TRANSLATION_HEADER_LABEL = 'TRANSLATION';
   static const String SOURCE_DROPDOWN_LABEL = 'SOURCE';

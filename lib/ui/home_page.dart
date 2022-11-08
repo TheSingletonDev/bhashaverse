@@ -12,6 +12,7 @@ import '../controllers/language_model_controller.dart';
 import '../controllers/app_ui_controller.dart';
 import '../controllers/recorder_controller.dart';
 import '../controllers/speech_to_speech_controller.dart';
+import 'widgets/horizontal_divider.dart';
 import 'widgets/info_btn.dart';
 import 'widgets/localization_btn.dart';
 
@@ -39,6 +40,7 @@ class HomePage extends StatelessWidget {
                         topRightImagePath: '${AppConstants.IMAGE_ASSETS_PATH}${AppConstants.HOMEPAGE_TOP_RIGHT_IMAGE}',
                         bottomLeftImagePath: '${AppConstants.IMAGE_ASSETS_PATH}${AppConstants.HOMEPAGE_BOTTOM_LEFT_IMAGE}',
                       ),
+                      //Info Button on top-left
                       Align(
                         alignment: Alignment.topLeft,
                         child: SafeArea(
@@ -52,6 +54,7 @@ class HomePage extends StatelessWidget {
                           ),
                         ),
                       ),
+                      //Language Swtich on top-right
                       Align(
                         alignment: Alignment.topRight,
                         child: SafeArea(
@@ -127,7 +130,7 @@ class HomePage extends StatelessWidget {
                                         ),
                                         HorizontalDivider(horMargin: 10.w, verMargin: 15.h, dividerHeight: 2.h, dividerBorderRad: 2.h),
 
-                                        // Input Record Button
+                                        // Input Section
                                         Expanded(
                                           flex: 3,
                                           child: Column(
@@ -140,12 +143,30 @@ class HomePage extends StatelessWidget {
                                                 style: GoogleFonts.kodchasan(
                                                     fontSize: 20.h, color: AppConstants.STANDARD_WHITE, fontWeight: FontWeight.w700),
                                               ),
+                                              // Record and Update Button
                                               Expanded(
-                                                  child: SizedBox(
-                                                width: 1.sw,
-                                                child: RecordStopButton(
-                                                    iconList: const [Icons.mic_none_rounded, Icons.stop_circle_outlined],
-                                                    labelList: [AppConstants.RECORD_BUTTON_TEXT.tr, AppConstants.STOP_BUTTON_TEXT.tr]),
+                                                  child: Row(
+                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                children: [
+                                                  // Record Button
+                                                  Expanded(
+                                                    child: SizedBox(
+                                                      width: 1.sw,
+                                                      child: RecordStopButton(
+                                                          iconList: const [Icons.mic_none_rounded, Icons.stop_circle_outlined],
+                                                          labelList: [AppConstants.RECORD_BUTTON_TEXT.tr, AppConstants.STOP_BUTTON_TEXT.tr]),
+                                                    ),
+                                                  ),
+                                                  //Update Button
+                                                  Expanded(
+                                                    child: SizedBox(
+                                                      width: 1.sw,
+                                                      child: UpdateUpdatingButton(
+                                                          iconList: const [Icons.update_rounded, Icons.downloading_rounded],
+                                                          labelList: [AppConstants.UPDATE_BUTTON_TEXT.tr, AppConstants.UPDATING_BUTTON_TEXT.tr]),
+                                                    ),
+                                                  ),
+                                                ],
                                               )),
                                             ],
                                           ),
@@ -418,60 +439,6 @@ class ContainerContent extends StatelessWidget {
             child: BaseOutputContainer(outputOfASROrTranslation: outputOfASROrTranslation),
           )
         ],
-      ),
-    );
-  }
-}
-
-class HorizontalDivider extends StatelessWidget {
-  final double horMargin;
-  final double verMargin;
-  final double dividerHeight;
-  final double dividerBorderRad;
-
-  const HorizontalDivider({
-    Key? key,
-    required this.horMargin,
-    required this.verMargin,
-    required this.dividerHeight,
-    required this.dividerBorderRad,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: horMargin, vertical: verMargin),
-      height: dividerHeight,
-      decoration: BoxDecoration(
-        color: AppConstants.STANDARD_WHITE,
-        borderRadius: BorderRadius.circular(dividerBorderRad),
-      ),
-    );
-  }
-}
-
-class VerticalDivider extends StatelessWidget {
-  final double horMargin;
-  final double verMargin;
-  final double dividerWidth;
-  final double dividerBorderRad;
-
-  const VerticalDivider({
-    Key? key,
-    required this.horMargin,
-    required this.verMargin,
-    required this.dividerWidth,
-    required this.dividerBorderRad,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: horMargin, vertical: verMargin),
-      width: dividerWidth,
-      decoration: BoxDecoration(
-        color: AppConstants.STANDARD_WHITE,
-        borderRadius: BorderRadius.circular(dividerBorderRad),
       ),
     );
   }
@@ -985,6 +952,80 @@ class RecordStopButton extends StatelessWidget {
                               : appUIController.hasSpeechToSpeechRequestsInitiated
                                   ? AppConstants.NETWORK_REQS_IN_PROGRESS_ERROR_MSG.tr
                                   : '');
+                },
+          icon: Icon(
+            currentIcon,
+            color: currentColor,
+            size: 40.w,
+          ),
+          label: AutoSizeText(
+            currentLabel,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            maxFontSize: (30.w).toInt().toDouble(),
+            style: GoogleFonts.kodchasan(color: currentColor, fontSize: 30.w, fontWeight: FontWeight.w700),
+          ),
+          style: ButtonStyle(
+            elevation: MaterialStateProperty.all(0),
+            backgroundColor: MaterialStateProperty.all(Colors.transparent),
+            overlayColor: MaterialStateProperty.all(AppConstants.STANDARD_BLACK),
+            padding: MaterialStateProperty.all(
+              EdgeInsets.only(top: 5.h, bottom: 5.h, left: 5.w, right: 5.w),
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
+class UpdateUpdatingButton extends StatelessWidget {
+  final List<IconData> iconList;
+  final List<String> labelList;
+
+  const UpdateUpdatingButton({
+    required this.iconList,
+    required this.labelList,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return GetBuilder<AppUIController>(
+      builder: (appUIController) {
+        bool isActive = appUIController.selectedTargetLangNameInUI.isNotEmpty;
+        if (isActive) {
+          isActive = !appUIController.isTTSOutputPlaying;
+        }
+        if (isActive) {
+          isActive = !appUIController.hasSpeechToSpeechRequestsInitiated;
+        }
+        if (isActive) {
+          isActive = appUIController.isASRResponseGenerated;
+        }
+        IconData currentIcon = appUIController.hasSpeechToSpeechUpdateRequestsInitiated ? iconList[1] : iconList[0];
+        String currentLabel = appUIController.hasSpeechToSpeechUpdateRequestsInitiated ? labelList[1] : labelList[0];
+        Color currentColor = isActive ? AppConstants.STANDARD_WHITE : AppConstants.STANDARD_OFF_WHITE.withOpacity(0.7);
+
+        onPressMethod() async {
+          await Get.find<RecorderController>().updateTransAndTTSForAlreadyPresentASR();
+        }
+
+        return ElevatedButton.icon(
+          onPressed: isActive
+              ? onPressMethod
+              : () {
+                  showSnackbar(
+                      title: AppConstants.ERROR_LABEL.tr,
+                      message: appUIController.isUserRecording
+                          ? AppConstants.RECORDING_IN_PROGRESS.tr
+                          : appUIController.isTTSOutputPlaying
+                              ? AppConstants.OUTPUT_PLAYING_ERROR_MSG.tr
+                              : appUIController.selectedTargetLangNameInUI.isEmpty
+                                  ? AppConstants.SELECT_TARGET_LANG_ERROR_MSG.tr
+                                  : appUIController.hasSpeechToSpeechRequestsInitiated
+                                      ? AppConstants.NETWORK_REQS_IN_PROGRESS_ERROR_MSG.tr
+                                      : '');
                 },
           icon: Icon(
             currentIcon,
