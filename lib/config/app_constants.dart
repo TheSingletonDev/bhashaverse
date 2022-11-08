@@ -98,6 +98,7 @@ class AppConstants {
   static const String OUTPUT_PLAYING_ERROR_MSG = 'Audio Playback in progress !';
   static const String SELECT_SOURCE_LANG_ERROR_MSG = 'Please select a Source Language first !';
   static const String SELECT_TARGET_LANG_ERROR_MSG = 'Please select a Target Language first !';
+  static const String ASR_NOT_GENERATED_ERROR_MSG = 'Please generate ASR output first !';
   static const String TTS_NOT_GENERATED_ERROR_MSG = 'Please generate TTS output first !';
   static const String NETWORK_REQS_IN_PROGRESS_ERROR_MSG = 'Currently processing previous requests !';
   static const String MALE_FEMALE_TTS_UNAVAILABLE = '%replaceContent% voice output is not available !';

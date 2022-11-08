@@ -1017,15 +1017,17 @@ class UpdateUpdatingButton extends StatelessWidget {
               : () {
                   showSnackbar(
                       title: AppConstants.ERROR_LABEL.tr,
-                      message: appUIController.isUserRecording
-                          ? AppConstants.RECORDING_IN_PROGRESS.tr
-                          : appUIController.isTTSOutputPlaying
-                              ? AppConstants.OUTPUT_PLAYING_ERROR_MSG.tr
-                              : appUIController.selectedTargetLangNameInUI.isEmpty
-                                  ? AppConstants.SELECT_TARGET_LANG_ERROR_MSG.tr
-                                  : appUIController.hasSpeechToSpeechRequestsInitiated
-                                      ? AppConstants.NETWORK_REQS_IN_PROGRESS_ERROR_MSG.tr
-                                      : '');
+                      message: !appUIController.isASRResponseGenerated
+                          ? AppConstants.ASR_NOT_GENERATED_ERROR_MSG.tr
+                          : appUIController.isUserRecording
+                              ? AppConstants.RECORDING_IN_PROGRESS.tr
+                              : appUIController.isTTSOutputPlaying
+                                  ? AppConstants.OUTPUT_PLAYING_ERROR_MSG.tr
+                                  : appUIController.selectedTargetLangNameInUI.isEmpty
+                                      ? AppConstants.SELECT_TARGET_LANG_ERROR_MSG.tr
+                                      : appUIController.hasSpeechToSpeechRequestsInitiated
+                                          ? AppConstants.NETWORK_REQS_IN_PROGRESS_ERROR_MSG.tr
+                                          : '');
                 },
           icon: Icon(
             currentIcon,
