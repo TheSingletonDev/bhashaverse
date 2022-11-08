@@ -19,19 +19,6 @@ class AppUIController extends GetxController {
 
   String _selectedTargetLanguageInUI = '';
   String get selectedTargetLangNameInUI => _selectedTargetLanguageInUI;
-  void changeTargetLanguagee({required String selectedTargetLanguageName}) {
-    changeIsASRResponseGenerated(isASRResponseGenerated: false);
-    changeIsTransResponseGenerated(isTransResponseGenerated: false);
-    changeIsTTSResponseFileGenerated(isTTSResponseFileGenerated: false);
-
-    changeIsMaleTTSAvailable(isMaleTTSAvailable: false);
-    changeIsFemaleTTSAvailable(isFemaleTTSAvailable: false);
-
-    changeCurrentRequestStatusForUI(newStatus: AppConstants.INITIAL_CURRENT_STATUS_VALUE.tr);
-    _selectedTargetLanguageInUI = selectedTargetLanguageName;
-    update();
-  }
-
   void changeTargetLanguage({required String selectedTargetLanguageName}) {
     if (isASRResponseGenerated) {
       //Enable record and update button
