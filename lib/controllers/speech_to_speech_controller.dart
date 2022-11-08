@@ -50,7 +50,6 @@ class SpeechToSpeechController extends GetxController {
   Future _sendSpeechToSpeechRequestsInternal({required String base64AudioContent}) async {
     try {
       _appUIController.changeHasSpeechToSpeechRequestsInitiated(hasSpeechToSpeechRequestsInitiated: true);
-
       _appUIController.changeCurrentRequestStatusForUI(
           newStatus: AppConstants.SPEECH_RECG_REQ_STATUS_MSG.tr.replaceFirst('%replaceContent%', _appUIController.selectedSourceLangNameInUI));
 
