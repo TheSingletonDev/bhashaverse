@@ -200,14 +200,14 @@ class SpeechToSpeechController extends GetxController {
       }
     }
 
-    //Check AI4Bharat Stream model availability
-    String ai4BharatStreamModelName = '';
-    for (var eachSubmitter in availableSubmittersList) {
-      if (eachSubmitter.toLowerCase().contains(AppConstants.DEFAULT_MODEL_TYPES[AppConstants.TYPES_OF_MODELS_LIST[0]]!.split(',')[1].toLowerCase()) &&
-          eachSubmitter.toLowerCase().contains(AppConstants.DEFAULT_MODEL_TYPES[AppConstants.TYPES_OF_MODELS_LIST[0]]!.split(',')[3].toLowerCase())) {
-        ai4BharatStreamModelName = eachSubmitter;
-      }
-    }
+    // //Check AI4Bharat Stream model availability
+    // String ai4BharatStreamModelName = '';
+    // for (var eachSubmitter in availableSubmittersList) {
+    //   if (eachSubmitter.toLowerCase().contains(AppConstants.DEFAULT_MODEL_TYPES[AppConstants.TYPES_OF_MODELS_LIST[0]]!.split(',')[1].toLowerCase()) &&
+    //       eachSubmitter.toLowerCase().contains(AppConstants.DEFAULT_MODEL_TYPES[AppConstants.TYPES_OF_MODELS_LIST[0]]!.split(',')[3].toLowerCase())) {
+    //     ai4BharatStreamModelName = eachSubmitter;
+    //   }
+    // }
 
     //Check any AI4Bharat model availability
     String ai4BharatModelName = '';

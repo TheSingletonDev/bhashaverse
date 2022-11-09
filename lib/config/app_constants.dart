@@ -107,14 +107,17 @@ class AppConstants {
   static const String CLIPBOARD_TEXT_COPY_SUCCESS = 'Text copied to Clipboard!';
 
   static const String DEVELOPED_BY_LABEL = 'Developed By';
-  static const String DEVELOPED_BY = 'Himanshu Gupta (Ernst & Young)';
+  static const String DEVELOPED_BY = 'Himanshu Gupta';
   static const String DEVELOPED_BY_ORG_LABEL = 'Organisations';
   static const String DEVELOPED_BY_ORG_CONTENT = 'EkStep, Ernst & Young, MeitY';
   static const String APPLICATION_VERSION_LABEL = 'Version';
-  static const String APPLICATION_VERSION = '1.5.1';
+  static const String APPLICATION_DOWNLOAD_LABEL = 'Download';
+  static const String APPLICATION_VERSION = '2.1.0';
 
   static const String HOMEPAGE_TOP_RIGHT_IMAGE = 'connected_dots_top_right.webp';
   static const String HOMEPAGE_BOTTOM_LEFT_IMAGE = 'connected_dots_bottom_left.webp';
+
+  static const String NEW_VERSION_URL = 'https://bit.ly/3Nj43Dj';
 
   static const STANDARD_WHITE = Color.fromARGB(255, 240, 240, 240);
   static const STANDARD_OFF_WHITE = Color.fromARGB(255, 90, 90, 90);

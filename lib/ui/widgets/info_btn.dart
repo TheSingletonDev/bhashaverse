@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../config/app_constants.dart';
+import 'snackbar.dart';
 
 class InfoButton extends StatelessWidget {
   const InfoButton({Key? key}) : super(key: key);
@@ -27,6 +29,7 @@ class InfoButton extends StatelessWidget {
                 padding: EdgeInsets.only(top: 0.05.sw, bottom: 0.05.sw, left: 0.05.sw, right: 0.05.sw),
                 child: Column(
                   children: [
+                    // Developed By label
                     Expanded(
                       child: Container(
                         padding: const EdgeInsets.all(10),
@@ -55,34 +58,7 @@ class InfoButton extends StatelessWidget {
                       ),
                     ),
                     10.verticalSpace,
-                    Expanded(
-                      child: Container(
-                        padding: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(5.h), color: AppConstants.STANDARD_OFF_WHITE.withOpacity(0.5)),
-                        child: SizedBox(
-                          width: double.infinity,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              AutoSizeText(
-                                AppConstants.DEVELOPED_BY_ORG_LABEL.tr,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: GoogleFonts.kodchasan(fontSize: 25.h, color: AppConstants.STANDARD_WHITE, fontWeight: FontWeight.w700),
-                              ),
-                              10.verticalSpace,
-                              AutoSizeText(
-                                AppConstants.DEVELOPED_BY_ORG_CONTENT.tr,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: GoogleFonts.comfortaa(fontSize: 20.h, color: AppConstants.STANDARD_WHITE, fontWeight: FontWeight.w700),
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    10.verticalSpace,
+                    // Version Details
                     Expanded(
                       child: Container(
                         padding: const EdgeInsets.all(10),
@@ -105,6 +81,44 @@ class InfoButton extends StatelessWidget {
                                 overflow: TextOverflow.ellipsis,
                                 style: GoogleFonts.comfortaa(fontSize: 20.h, color: AppConstants.STANDARD_WHITE, fontWeight: FontWeight.w700),
                               )
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    10.verticalSpace,
+                    // Download new versions
+                    Expanded(
+                      child: InkWell(
+                        onTap: () async {
+                          if (!await launchUrl(Uri.parse(AppConstants.NEW_VERSION_URL), mode: LaunchMode.externalApplication)) {
+                            showSnackbar(
+                              title: AppConstants.ERROR_LABEL.tr,
+                              message: 'Cannot open URL',
+                            );
+                          }
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5.h),
+                            color: AppConstants.STANDARD_OFF_WHITE.withOpacity(0.5),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Icon(
+                                Icons.download_rounded,
+                                color: AppConstants.STANDARD_WHITE,
+                                size: 40,
+                              ),
+                              10.horizontalSpace,
+                              AutoSizeText(
+                                AppConstants.APPLICATION_DOWNLOAD_LABEL.tr,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: GoogleFonts.kodchasan(fontSize: 30.h, color: AppConstants.STANDARD_WHITE, fontWeight: FontWeight.w700),
+                              ),
                             ],
                           ),
                         ),
