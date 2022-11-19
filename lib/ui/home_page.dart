@@ -565,77 +565,79 @@ class SourceDropDown extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<AppUIController>(builder: (appUIController) {
-      bool isActive = !appUIController.isTTSOutputPlaying;
-      String snackbarMsg = isActive ? '' : AppConstants.OUTPUT_PLAYING_ERROR_MSG.tr;
+    return GetBuilder<AppUIController>(
+      builder: (appUIController) {
+        bool isActive = !appUIController.isTTSOutputPlaying;
+        String snackbarMsg = isActive ? '' : AppConstants.OUTPUT_PLAYING_ERROR_MSG.tr;
 
-      Color currentColor = isActive ? AppConstants.STANDARD_WHITE : AppConstants.STANDARD_OFF_WHITE.withOpacity(0.7);
+        Color currentColor = isActive ? AppConstants.STANDARD_WHITE : AppConstants.STANDARD_OFF_WHITE.withOpacity(0.7);
 
-      return InkWell(
-        onTap: () {
-          LanguageModelController languageModelController = Get.find();
-          !isActive
-              ? showSnackbar(title: AppConstants.ERROR_LABEL.tr, message: snackbarMsg)
-              : Get.bottomSheet(
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Container(
-                      height: 0.38.sh,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(30),
-                        color: AppConstants.STANDARD_BLACK.withOpacity(0.97),
-                      ),
-                      child: GridView.builder(
-                        itemCount: languageModelController.allAvailableSourceLanguages.length,
-                        itemBuilder: (context, index) {
-                          String eachSourceLanguage = languageModelController.allAvailableSourceLanguages.elementAt(index);
-                          return InkWell(
-                            onTap: () {
-                              languageModelController.changeSelectedSourceLangAndCalcTargetLangs(selectedSourceLanguageName: eachSourceLanguage);
-                              // Delay for better User Experience. User tap shows a splash effect.
-                              Future.delayed(const Duration(milliseconds: 300)).then((_) => Get.back());
-                            },
-                            child: Center(
-                              child: AutoSizeText(
-                                eachSourceLanguage,
-                                minFontSize: (15.w).toInt().toDouble(),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: GoogleFonts.kodchasan(fontSize: 25.w, color: AppConstants.STANDARD_WHITE, fontWeight: FontWeight.w300),
+        return InkWell(
+          onTap: () {
+            LanguageModelController languageModelController = Get.find();
+            !isActive
+                ? showSnackbar(title: AppConstants.ERROR_LABEL.tr, message: snackbarMsg)
+                : Get.bottomSheet(
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Container(
+                        height: 0.38.sh,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(30),
+                          color: AppConstants.STANDARD_BLACK.withOpacity(0.97),
+                        ),
+                        child: GridView.builder(
+                          itemCount: languageModelController.allAvailableSourceLanguages.length,
+                          itemBuilder: (context, index) {
+                            String eachSourceLanguage = languageModelController.allAvailableSourceLanguages.elementAt(index);
+                            return InkWell(
+                              onTap: () {
+                                languageModelController.changeSelectedSourceLangAndCalcTargetLangs(selectedSourceLanguageName: eachSourceLanguage);
+                                // Delay for better User Experience. User tap shows a splash effect.
+                                Future.delayed(const Duration(milliseconds: 300)).then((_) => Get.back());
+                              },
+                              child: Center(
+                                child: AutoSizeText(
+                                  eachSourceLanguage,
+                                  minFontSize: (15.w).toInt().toDouble(),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: GoogleFonts.kodchasan(fontSize: 25.w, color: AppConstants.STANDARD_WHITE, fontWeight: FontWeight.w300),
+                                ),
                               ),
-                            ),
-                          );
-                        },
-                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 3,
-                          childAspectRatio: 2,
+                            );
+                          },
+                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 3,
+                            childAspectRatio: 2,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                );
-        },
-        splashColor: AppConstants.STANDARD_BLACK,
-        child: Row(
-          children: [
-            Expanded(
-              flex: 1,
-              child: AutoSizeText(
-                appUIController.selectedSourceLangNameInUI.isEmpty
-                    ? AppConstants.DEFAULT_SELECT_DROPDOWN_LABEL.tr
-                    : appUIController.selectedSourceLangNameInUI,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: GoogleFonts.kodchasan(fontSize: 22.w, color: currentColor, fontWeight: FontWeight.w500),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                  );
+          },
+          splashColor: AppConstants.STANDARD_BLACK,
+          child: Row(
+            children: [
+              Expanded(
+                flex: 1,
+                child: AutoSizeText(
+                  appUIController.selectedSourceLangNameInUI.isEmpty
+                      ? AppConstants.DEFAULT_SELECT_DROPDOWN_LABEL.tr
+                      : appUIController.selectedSourceLangNameInUI,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: GoogleFonts.kodchasan(fontSize: 22.w, color: currentColor, fontWeight: FontWeight.w500),
+                ),
               ),
-            ),
-            Icon(Icons.arrow_drop_down, color: currentColor, size: 35.w),
-          ],
-        ),
-      );
-    });
+              Icon(Icons.arrow_drop_down, color: currentColor, size: 35.w),
+            ],
+          ),
+        );
+      },
+    );
   }
 }
 
@@ -836,71 +838,73 @@ class LangSwapButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<AppUIController>(builder: (appUIController) {
-      bool isActive = appUIController.selectedTargetLangNameInUI.isNotEmpty;
+    return GetBuilder<AppUIController>(
+      builder: (appUIController) {
+        bool isActive = appUIController.selectedTargetLangNameInUI.isNotEmpty;
 
-      if (isActive) {
-        isActive = !appUIController.isTTSOutputPlaying;
-      }
-      if (isActive) {
-        isActive = !appUIController.hasSpeechToSpeechRequestsInitiated;
-      }
-      if (isActive) {
-        isActive = !appUIController.isUserRecording;
-      }
+        if (isActive) {
+          isActive = !appUIController.isTTSOutputPlaying;
+        }
+        if (isActive) {
+          isActive = !appUIController.hasSpeechToSpeechRequestsInitiated;
+        }
+        if (isActive) {
+          isActive = !appUIController.isUserRecording;
+        }
 
-      Color currColor = isActive ? AppConstants.STANDARD_WHITE : AppConstants.STANDARD_OFF_WHITE;
+        Color currColor = isActive ? AppConstants.STANDARD_WHITE : AppConstants.STANDARD_OFF_WHITE;
 
-      return InkWell(
-          onTap: () {
-            isActive
-                ? () {
-                    String currSourceLang = appUIController.selectedSourceLangNameInUI;
-                    String currTargetLang = appUIController.selectedTargetLangNameInUI;
-                    LanguageModelController languageModelController = Get.find();
+        return InkWell(
+            onTap: () {
+              isActive
+                  ? () {
+                      String currSourceLang = appUIController.selectedSourceLangNameInUI;
+                      String currTargetLang = appUIController.selectedTargetLangNameInUI;
+                      LanguageModelController languageModelController = Get.find();
 
-                    String sourceErrorMsg = '';
-                    String targetErrorMsg = '';
+                      String sourceErrorMsg = '';
+                      String targetErrorMsg = '';
 
-                    if (languageModelController.allAvailableSourceLanguages.contains(currTargetLang)) {
-                      languageModelController.changeSelectedSourceLangAndCalcTargetLangs(selectedSourceLanguageName: currTargetLang);
-                    } else {
-                      sourceErrorMsg = 'Target Language not avaiable as Source Language';
-                    }
-
-                    if (sourceErrorMsg.isNotEmpty) {
-                      showSnackbar(title: AppConstants.ERROR_LABEL.tr, message: sourceErrorMsg);
-                      languageModelController.changeSelectedSourceLangAndCalcTargetLangs(selectedSourceLanguageName: currSourceLang);
-                      appUIController.changeTargetLanguage(selectedTargetLanguageName: AppConstants.DEFAULT_SELECT_DROPDOWN_LABEL.tr);
-                    } else {
-                      if (languageModelController.availableTargetLangsForSelectedSourceLang.contains(currSourceLang)) {
-                        appUIController.changeTargetLanguage(selectedTargetLanguageName: currSourceLang);
+                      if (languageModelController.allAvailableSourceLanguages.contains(currTargetLang)) {
+                        languageModelController.changeSelectedSourceLangAndCalcTargetLangs(selectedSourceLanguageName: currTargetLang);
                       } else {
-                        targetErrorMsg = 'Source Language not avaiable as Target Language';
+                        sourceErrorMsg = 'Target Language not avaiable as Source Language';
                       }
-                    }
 
-                    if (targetErrorMsg.isNotEmpty) {
-                      showSnackbar(title: AppConstants.ERROR_LABEL.tr, message: targetErrorMsg);
-                      languageModelController.changeSelectedSourceLangAndCalcTargetLangs(selectedSourceLanguageName: currSourceLang);
-                      appUIController.changeTargetLanguage(selectedTargetLanguageName: AppConstants.DEFAULT_SELECT_DROPDOWN_LABEL.tr);
-                    }
-                  }()
-                : showSnackbar(
-                    title: AppConstants.ERROR_LABEL.tr,
-                    message: appUIController.isTTSOutputPlaying
-                        ? AppConstants.OUTPUT_PLAYING_ERROR_MSG.tr
-                        : appUIController.selectedTargetLangNameInUI.isEmpty
-                            ? AppConstants.SELECT_TARGET_LANG_ERROR_MSG.tr
-                            : appUIController.hasSpeechToSpeechRequestsInitiated
-                                ? AppConstants.NETWORK_REQS_IN_PROGRESS_ERROR_MSG.tr
-                                : appUIController.isUserRecording
-                                    ? AppConstants.RECORDING_IN_PROGRESS.tr
-                                    : '');
-          },
-          splashColor: AppConstants.STANDARD_BLACK,
-          child: Icon(Icons.compare_arrows_rounded, color: currColor, size: 40.w));
-    });
+                      if (sourceErrorMsg.isNotEmpty) {
+                        showSnackbar(title: AppConstants.ERROR_LABEL.tr, message: sourceErrorMsg);
+                        languageModelController.changeSelectedSourceLangAndCalcTargetLangs(selectedSourceLanguageName: currSourceLang);
+                        appUIController.changeTargetLanguage(selectedTargetLanguageName: AppConstants.DEFAULT_SELECT_DROPDOWN_LABEL.tr);
+                      } else {
+                        if (languageModelController.availableTargetLangsForSelectedSourceLang.contains(currSourceLang)) {
+                          appUIController.changeTargetLanguage(selectedTargetLanguageName: currSourceLang);
+                        } else {
+                          targetErrorMsg = 'Source Language not avaiable as Target Language';
+                        }
+                      }
+
+                      if (targetErrorMsg.isNotEmpty) {
+                        showSnackbar(title: AppConstants.ERROR_LABEL.tr, message: targetErrorMsg);
+                        languageModelController.changeSelectedSourceLangAndCalcTargetLangs(selectedSourceLanguageName: currSourceLang);
+                        appUIController.changeTargetLanguage(selectedTargetLanguageName: AppConstants.DEFAULT_SELECT_DROPDOWN_LABEL.tr);
+                      }
+                    }()
+                  : showSnackbar(
+                      title: AppConstants.ERROR_LABEL.tr,
+                      message: appUIController.isTTSOutputPlaying
+                          ? AppConstants.OUTPUT_PLAYING_ERROR_MSG.tr
+                          : appUIController.selectedTargetLangNameInUI.isEmpty
+                              ? AppConstants.SELECT_TARGET_LANG_ERROR_MSG.tr
+                              : appUIController.hasSpeechToSpeechRequestsInitiated
+                                  ? AppConstants.NETWORK_REQS_IN_PROGRESS_ERROR_MSG.tr
+                                  : appUIController.isUserRecording
+                                      ? AppConstants.RECORDING_IN_PROGRESS.tr
+                                      : '');
+            },
+            splashColor: AppConstants.STANDARD_BLACK,
+            child: Icon(Icons.compare_arrows_rounded, color: currColor, size: 40.w));
+      },
+    );
   }
 }
 
