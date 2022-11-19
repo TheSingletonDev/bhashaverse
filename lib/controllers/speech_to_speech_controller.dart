@@ -133,6 +133,8 @@ class SpeechToSpeechController extends GetxController {
       }
 
       _appUIController.changeHasSpeechToSpeechRequestsInitiated(hasSpeechToSpeechRequestsInitiated: false);
+      _appUIController.changeHasSpeechToSpeechUpdateRequestsInitiated(hasSpeechToSpeechUpdateRequestsInitiated: false); // Only for Update Button
+
       _appUIController.changeHasTTSRequestInitiated(hasTTSRequestInitiated: false);
 
       if (_appUIController.isMaleTTSAvailable && _appUIController.isFemaleTTSAvailable) {
@@ -157,6 +159,7 @@ class SpeechToSpeechController extends GetxController {
       }
     } on Exception {
       _appUIController.changeHasSpeechToSpeechRequestsInitiated(hasSpeechToSpeechRequestsInitiated: false);
+      _appUIController.changeHasSpeechToSpeechUpdateRequestsInitiated(hasSpeechToSpeechUpdateRequestsInitiated: false); //Only for Update Button
       _appUIController.changeHasTTSRequestInitiated(hasTTSRequestInitiated: false);
       _appUIController.changeIsTTSResponseFileGenerated(isTTSResponseFileGenerated: false);
     }
@@ -197,14 +200,14 @@ class SpeechToSpeechController extends GetxController {
       }
     }
 
-    //Check AI4Bharat Stream model availability
-    String ai4BharatStreamModelName = '';
-    for (var eachSubmitter in availableSubmittersList) {
-      if (eachSubmitter.toLowerCase().contains(AppConstants.DEFAULT_MODEL_TYPES[AppConstants.TYPES_OF_MODELS_LIST[0]]!.split(',')[1].toLowerCase()) &&
-          eachSubmitter.toLowerCase().contains(AppConstants.DEFAULT_MODEL_TYPES[AppConstants.TYPES_OF_MODELS_LIST[0]]!.split(',')[3].toLowerCase())) {
-        ai4BharatStreamModelName = eachSubmitter;
-      }
-    }
+    // //Check AI4Bharat Stream model availability
+    // String ai4BharatStreamModelName = '';
+    // for (var eachSubmitter in availableSubmittersList) {
+    //   if (eachSubmitter.toLowerCase().contains(AppConstants.DEFAULT_MODEL_TYPES[AppConstants.TYPES_OF_MODELS_LIST[0]]!.split(',')[1].toLowerCase()) &&
+    //       eachSubmitter.toLowerCase().contains(AppConstants.DEFAULT_MODEL_TYPES[AppConstants.TYPES_OF_MODELS_LIST[0]]!.split(',')[3].toLowerCase())) {
+    //     ai4BharatStreamModelName = eachSubmitter;
+    //   }
+    // }
 
     //Check any AI4Bharat model availability
     String ai4BharatModelName = '';

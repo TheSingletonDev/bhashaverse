@@ -12,8 +12,10 @@ import '../controllers/language_model_controller.dart';
 import '../controllers/app_ui_controller.dart';
 import '../controllers/recorder_controller.dart';
 import '../controllers/speech_to_speech_controller.dart';
+import 'widgets/horizontal_divider.dart';
 import 'widgets/info_btn.dart';
 import 'widgets/localization_btn.dart';
+import 'widgets/snackbar.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -39,6 +41,7 @@ class HomePage extends StatelessWidget {
                         topRightImagePath: '${AppConstants.IMAGE_ASSETS_PATH}${AppConstants.HOMEPAGE_TOP_RIGHT_IMAGE}',
                         bottomLeftImagePath: '${AppConstants.IMAGE_ASSETS_PATH}${AppConstants.HOMEPAGE_BOTTOM_LEFT_IMAGE}',
                       ),
+                      //Info Button on top-left
                       Align(
                         alignment: Alignment.topLeft,
                         child: SafeArea(
@@ -52,6 +55,7 @@ class HomePage extends StatelessWidget {
                           ),
                         ),
                       ),
+                      //Language Swtich on top-right
                       Align(
                         alignment: Alignment.topRight,
                         child: SafeArea(
@@ -127,7 +131,7 @@ class HomePage extends StatelessWidget {
                                         ),
                                         HorizontalDivider(horMargin: 10.w, verMargin: 15.h, dividerHeight: 2.h, dividerBorderRad: 2.h),
 
-                                        // Input Record Button
+                                        // Input Section
                                         Expanded(
                                           flex: 3,
                                           child: Column(
@@ -140,12 +144,30 @@ class HomePage extends StatelessWidget {
                                                 style: GoogleFonts.kodchasan(
                                                     fontSize: 20.h, color: AppConstants.STANDARD_WHITE, fontWeight: FontWeight.w700),
                                               ),
+                                              // Record and Update Button
                                               Expanded(
-                                                  child: SizedBox(
-                                                width: 1.sw,
-                                                child: RecordStopButton(
-                                                    iconList: const [Icons.mic_none_rounded, Icons.stop_circle_outlined],
-                                                    labelList: [AppConstants.RECORD_BUTTON_TEXT.tr, AppConstants.STOP_BUTTON_TEXT.tr]),
+                                                  child: Row(
+                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                children: [
+                                                  // Record Button
+                                                  Expanded(
+                                                    child: SizedBox(
+                                                      width: 1.sw,
+                                                      child: RecordStopButton(
+                                                          iconList: const [Icons.mic_none_rounded, Icons.stop_circle_outlined],
+                                                          labelList: [AppConstants.RECORD_BUTTON_TEXT.tr, AppConstants.STOP_BUTTON_TEXT.tr]),
+                                                    ),
+                                                  ),
+                                                  //Update Button
+                                                  Expanded(
+                                                    child: SizedBox(
+                                                      width: 1.sw,
+                                                      child: UpdateUpdatingButton(
+                                                          iconList: const [Icons.update_rounded, Icons.downloading_rounded],
+                                                          labelList: [AppConstants.UPDATE_BUTTON_TEXT.tr, AppConstants.UPDATING_BUTTON_TEXT.tr]),
+                                                    ),
+                                                  ),
+                                                ],
                                               )),
                                             ],
                                           ),
@@ -423,60 +445,6 @@ class ContainerContent extends StatelessWidget {
   }
 }
 
-class HorizontalDivider extends StatelessWidget {
-  final double horMargin;
-  final double verMargin;
-  final double dividerHeight;
-  final double dividerBorderRad;
-
-  const HorizontalDivider({
-    Key? key,
-    required this.horMargin,
-    required this.verMargin,
-    required this.dividerHeight,
-    required this.dividerBorderRad,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: horMargin, vertical: verMargin),
-      height: dividerHeight,
-      decoration: BoxDecoration(
-        color: AppConstants.STANDARD_WHITE,
-        borderRadius: BorderRadius.circular(dividerBorderRad),
-      ),
-    );
-  }
-}
-
-class VerticalDivider extends StatelessWidget {
-  final double horMargin;
-  final double verMargin;
-  final double dividerWidth;
-  final double dividerBorderRad;
-
-  const VerticalDivider({
-    Key? key,
-    required this.horMargin,
-    required this.verMargin,
-    required this.dividerWidth,
-    required this.dividerBorderRad,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: horMargin, vertical: verMargin),
-      width: dividerWidth,
-      decoration: BoxDecoration(
-        color: AppConstants.STANDARD_WHITE,
-        borderRadius: BorderRadius.circular(dividerBorderRad),
-      ),
-    );
-  }
-}
-
 // Container to show ASR/Translation Output
 class BaseOutputContainer extends StatelessWidget {
   final MODEL_TYPES outputOfASROrTranslation;
@@ -506,7 +474,7 @@ class ASROutput extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetBuilder<AppUIController>(
       builder: (appUIController) {
-        SpeechToSpeechController speechToSpeechController = Get.find<SpeechToSpeechController>();
+        SpeechToSpeechController speechToSpeechController = Get.find();
         return appUIController.isASRResponseGenerated
             ? GestureDetector(
                 onTap: () {
@@ -537,7 +505,7 @@ class TransOutput extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetBuilder<AppUIController>(
       builder: (appUIController) {
-        SpeechToSpeechController speechToSpeechController = Get.find<SpeechToSpeechController>();
+        SpeechToSpeechController speechToSpeechController = Get.find();
         return appUIController.isTransResponseGenerated
             ? GestureDetector(
                 onTap: () {
@@ -597,77 +565,79 @@ class SourceDropDown extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<AppUIController>(builder: (appUIController) {
-      bool isActive = !appUIController.isTTSOutputPlaying;
-      String snackbarMsg = isActive ? '' : AppConstants.OUTPUT_PLAYING_ERROR_MSG.tr;
+    return GetBuilder<AppUIController>(
+      builder: (appUIController) {
+        bool isActive = !appUIController.isTTSOutputPlaying;
+        String snackbarMsg = isActive ? '' : AppConstants.OUTPUT_PLAYING_ERROR_MSG.tr;
 
-      Color currentColor = isActive ? AppConstants.STANDARD_WHITE : AppConstants.STANDARD_OFF_WHITE.withOpacity(0.7);
+        Color currentColor = isActive ? AppConstants.STANDARD_WHITE : AppConstants.STANDARD_OFF_WHITE.withOpacity(0.7);
 
-      return InkWell(
-        onTap: () {
-          LanguageModelController languageModelController = Get.find();
-          !isActive
-              ? showSnackbar(title: AppConstants.ERROR_LABEL.tr, message: snackbarMsg)
-              : Get.bottomSheet(
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Container(
-                      height: 0.38.sh,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(30),
-                        color: AppConstants.STANDARD_BLACK.withOpacity(0.97),
-                      ),
-                      child: GridView.builder(
-                        itemCount: languageModelController.allAvailableSourceLanguages.length,
-                        itemBuilder: (context, index) {
-                          String eachSourceLanguage = languageModelController.allAvailableSourceLanguages.elementAt(index);
-                          return InkWell(
-                            onTap: () {
-                              languageModelController.changeSelectedSourceLangAndCalcTargetLangs(selectedSourceLanguageName: eachSourceLanguage);
-                              // Delay for better User Experience. User tap shows a splash effect.
-                              Future.delayed(const Duration(milliseconds: 300)).then((_) => Get.back());
-                            },
-                            child: Center(
-                              child: AutoSizeText(
-                                eachSourceLanguage,
-                                minFontSize: (15.w).toInt().toDouble(),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: GoogleFonts.kodchasan(fontSize: 25.w, color: AppConstants.STANDARD_WHITE, fontWeight: FontWeight.w300),
+        return InkWell(
+          onTap: () {
+            LanguageModelController languageModelController = Get.find();
+            !isActive
+                ? showSnackbar(title: AppConstants.ERROR_LABEL.tr, message: snackbarMsg)
+                : Get.bottomSheet(
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Container(
+                        height: 0.38.sh,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(30),
+                          color: AppConstants.STANDARD_BLACK.withOpacity(0.97),
+                        ),
+                        child: GridView.builder(
+                          itemCount: languageModelController.allAvailableSourceLanguages.length,
+                          itemBuilder: (context, index) {
+                            String eachSourceLanguage = languageModelController.allAvailableSourceLanguages.elementAt(index);
+                            return InkWell(
+                              onTap: () {
+                                languageModelController.changeSelectedSourceLangAndCalcTargetLangs(selectedSourceLanguageName: eachSourceLanguage);
+                                // Delay for better User Experience. User tap shows a splash effect.
+                                Future.delayed(const Duration(milliseconds: 300)).then((_) => Get.back());
+                              },
+                              child: Center(
+                                child: AutoSizeText(
+                                  eachSourceLanguage,
+                                  minFontSize: (15.w).toInt().toDouble(),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: GoogleFonts.kodchasan(fontSize: 25.w, color: AppConstants.STANDARD_WHITE, fontWeight: FontWeight.w300),
+                                ),
                               ),
-                            ),
-                          );
-                        },
-                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 3,
-                          childAspectRatio: 2,
+                            );
+                          },
+                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 3,
+                            childAspectRatio: 2,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                );
-        },
-        splashColor: AppConstants.STANDARD_BLACK,
-        child: Row(
-          children: [
-            Expanded(
-              flex: 1,
-              child: AutoSizeText(
-                appUIController.selectedSourceLangNameInUI.isEmpty
-                    ? AppConstants.DEFAULT_SELECT_DROPDOWN_LABEL.tr
-                    : appUIController.selectedSourceLangNameInUI,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: GoogleFonts.kodchasan(fontSize: 22.w, color: currentColor, fontWeight: FontWeight.w500),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                  );
+          },
+          splashColor: AppConstants.STANDARD_BLACK,
+          child: Row(
+            children: [
+              Expanded(
+                flex: 1,
+                child: AutoSizeText(
+                  appUIController.selectedSourceLangNameInUI.isEmpty
+                      ? AppConstants.DEFAULT_SELECT_DROPDOWN_LABEL.tr
+                      : appUIController.selectedSourceLangNameInUI,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: GoogleFonts.kodchasan(fontSize: 22.w, color: currentColor, fontWeight: FontWeight.w500),
+                ),
               ),
-            ),
-            Icon(Icons.arrow_drop_down, color: currentColor, size: 35.w),
-          ],
-        ),
-      );
-    });
+              Icon(Icons.arrow_drop_down, color: currentColor, size: 35.w),
+            ],
+          ),
+        );
+      },
+    );
   }
 }
 
@@ -868,71 +838,73 @@ class LangSwapButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<AppUIController>(builder: (appUIController) {
-      bool isActive = appUIController.selectedTargetLangNameInUI.isNotEmpty;
+    return GetBuilder<AppUIController>(
+      builder: (appUIController) {
+        bool isActive = appUIController.selectedTargetLangNameInUI.isNotEmpty;
 
-      if (isActive) {
-        isActive = !appUIController.isTTSOutputPlaying;
-      }
-      if (isActive) {
-        isActive = !appUIController.hasSpeechToSpeechRequestsInitiated;
-      }
-      if (isActive) {
-        isActive = !appUIController.isUserRecording;
-      }
+        if (isActive) {
+          isActive = !appUIController.isTTSOutputPlaying;
+        }
+        if (isActive) {
+          isActive = !appUIController.hasSpeechToSpeechRequestsInitiated;
+        }
+        if (isActive) {
+          isActive = !appUIController.isUserRecording;
+        }
 
-      Color currColor = isActive ? AppConstants.STANDARD_WHITE : AppConstants.STANDARD_OFF_WHITE;
+        Color currColor = isActive ? AppConstants.STANDARD_WHITE : AppConstants.STANDARD_OFF_WHITE;
 
-      return InkWell(
-          onTap: () {
-            isActive
-                ? () {
-                    String currSourceLang = appUIController.selectedSourceLangNameInUI;
-                    String currTargetLang = appUIController.selectedTargetLangNameInUI;
-                    LanguageModelController languageModelController = Get.find();
+        return InkWell(
+            onTap: () {
+              isActive
+                  ? () {
+                      String currSourceLang = appUIController.selectedSourceLangNameInUI;
+                      String currTargetLang = appUIController.selectedTargetLangNameInUI;
+                      LanguageModelController languageModelController = Get.find();
 
-                    String sourceErrorMsg = '';
-                    String targetErrorMsg = '';
+                      String sourceErrorMsg = '';
+                      String targetErrorMsg = '';
 
-                    if (languageModelController.allAvailableSourceLanguages.contains(currTargetLang)) {
-                      languageModelController.changeSelectedSourceLangAndCalcTargetLangs(selectedSourceLanguageName: currTargetLang);
-                    } else {
-                      sourceErrorMsg = 'Target Language not avaiable as Source Language';
-                    }
-
-                    if (sourceErrorMsg.isNotEmpty) {
-                      showSnackbar(title: AppConstants.ERROR_LABEL.tr, message: sourceErrorMsg);
-                      languageModelController.changeSelectedSourceLangAndCalcTargetLangs(selectedSourceLanguageName: currSourceLang);
-                      appUIController.changeTargetLanguage(selectedTargetLanguageName: AppConstants.DEFAULT_SELECT_DROPDOWN_LABEL.tr);
-                    } else {
-                      if (languageModelController.availableTargetLangsForSelectedSourceLang.contains(currSourceLang)) {
-                        appUIController.changeTargetLanguage(selectedTargetLanguageName: currSourceLang);
+                      if (languageModelController.allAvailableSourceLanguages.contains(currTargetLang)) {
+                        languageModelController.changeSelectedSourceLangAndCalcTargetLangs(selectedSourceLanguageName: currTargetLang);
                       } else {
-                        targetErrorMsg = 'Source Language not avaiable as Target Language';
+                        sourceErrorMsg = 'Target Language not avaiable as Source Language';
                       }
-                    }
 
-                    if (targetErrorMsg.isNotEmpty) {
-                      showSnackbar(title: AppConstants.ERROR_LABEL.tr, message: targetErrorMsg);
-                      languageModelController.changeSelectedSourceLangAndCalcTargetLangs(selectedSourceLanguageName: currSourceLang);
-                      appUIController.changeTargetLanguage(selectedTargetLanguageName: AppConstants.DEFAULT_SELECT_DROPDOWN_LABEL.tr);
-                    }
-                  }()
-                : showSnackbar(
-                    title: AppConstants.ERROR_LABEL.tr,
-                    message: appUIController.isTTSOutputPlaying
-                        ? AppConstants.OUTPUT_PLAYING_ERROR_MSG.tr
-                        : appUIController.selectedTargetLangNameInUI.isEmpty
-                            ? AppConstants.SELECT_TARGET_LANG_ERROR_MSG.tr
-                            : appUIController.hasSpeechToSpeechRequestsInitiated
-                                ? AppConstants.NETWORK_REQS_IN_PROGRESS_ERROR_MSG.tr
-                                : appUIController.isUserRecording
-                                    ? AppConstants.RECORDING_IN_PROGRESS.tr
-                                    : '');
-          },
-          splashColor: AppConstants.STANDARD_BLACK,
-          child: Icon(Icons.compare_arrows_rounded, color: currColor, size: 40.w));
-    });
+                      if (sourceErrorMsg.isNotEmpty) {
+                        showSnackbar(title: AppConstants.ERROR_LABEL.tr, message: sourceErrorMsg);
+                        languageModelController.changeSelectedSourceLangAndCalcTargetLangs(selectedSourceLanguageName: currSourceLang);
+                        appUIController.changeTargetLanguage(selectedTargetLanguageName: AppConstants.DEFAULT_SELECT_DROPDOWN_LABEL.tr);
+                      } else {
+                        if (languageModelController.availableTargetLangsForSelectedSourceLang.contains(currSourceLang)) {
+                          appUIController.changeTargetLanguage(selectedTargetLanguageName: currSourceLang);
+                        } else {
+                          targetErrorMsg = 'Source Language not avaiable as Target Language';
+                        }
+                      }
+
+                      if (targetErrorMsg.isNotEmpty) {
+                        showSnackbar(title: AppConstants.ERROR_LABEL.tr, message: targetErrorMsg);
+                        languageModelController.changeSelectedSourceLangAndCalcTargetLangs(selectedSourceLanguageName: currSourceLang);
+                        appUIController.changeTargetLanguage(selectedTargetLanguageName: AppConstants.DEFAULT_SELECT_DROPDOWN_LABEL.tr);
+                      }
+                    }()
+                  : showSnackbar(
+                      title: AppConstants.ERROR_LABEL.tr,
+                      message: appUIController.isTTSOutputPlaying
+                          ? AppConstants.OUTPUT_PLAYING_ERROR_MSG.tr
+                          : appUIController.selectedTargetLangNameInUI.isEmpty
+                              ? AppConstants.SELECT_TARGET_LANG_ERROR_MSG.tr
+                              : appUIController.hasSpeechToSpeechRequestsInitiated
+                                  ? AppConstants.NETWORK_REQS_IN_PROGRESS_ERROR_MSG.tr
+                                  : appUIController.isUserRecording
+                                      ? AppConstants.RECORDING_IN_PROGRESS.tr
+                                      : '');
+            },
+            splashColor: AppConstants.STANDARD_BLACK,
+            child: Icon(Icons.compare_arrows_rounded, color: currColor, size: 40.w));
+      },
+    );
   }
 }
 
@@ -985,6 +957,82 @@ class RecordStopButton extends StatelessWidget {
                               : appUIController.hasSpeechToSpeechRequestsInitiated
                                   ? AppConstants.NETWORK_REQS_IN_PROGRESS_ERROR_MSG.tr
                                   : '');
+                },
+          icon: Icon(
+            currentIcon,
+            color: currentColor,
+            size: 40.w,
+          ),
+          label: AutoSizeText(
+            currentLabel,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            maxFontSize: (30.w).toInt().toDouble(),
+            style: GoogleFonts.kodchasan(color: currentColor, fontSize: 30.w, fontWeight: FontWeight.w700),
+          ),
+          style: ButtonStyle(
+            elevation: MaterialStateProperty.all(0),
+            backgroundColor: MaterialStateProperty.all(Colors.transparent),
+            overlayColor: MaterialStateProperty.all(AppConstants.STANDARD_BLACK),
+            padding: MaterialStateProperty.all(
+              EdgeInsets.only(top: 5.h, bottom: 5.h, left: 5.w, right: 5.w),
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
+class UpdateUpdatingButton extends StatelessWidget {
+  final List<IconData> iconList;
+  final List<String> labelList;
+
+  const UpdateUpdatingButton({
+    required this.iconList,
+    required this.labelList,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return GetBuilder<AppUIController>(
+      builder: (appUIController) {
+        bool isActive = appUIController.selectedTargetLangNameInUI.isNotEmpty;
+        if (isActive) {
+          isActive = !appUIController.isTTSOutputPlaying;
+        }
+        if (isActive) {
+          isActive = !appUIController.hasSpeechToSpeechRequestsInitiated;
+        }
+        if (isActive) {
+          isActive = appUIController.isASRResponseGenerated;
+        }
+        IconData currentIcon = appUIController.hasSpeechToSpeechUpdateRequestsInitiated ? iconList[1] : iconList[0];
+        String currentLabel = appUIController.hasSpeechToSpeechUpdateRequestsInitiated ? labelList[1] : labelList[0];
+        Color currentColor = isActive ? AppConstants.STANDARD_WHITE : AppConstants.STANDARD_OFF_WHITE.withOpacity(0.7);
+
+        onPressMethod() async {
+          await Get.find<RecorderController>().updateTransAndTTSForAlreadyPresentASR();
+        }
+
+        return ElevatedButton.icon(
+          onPressed: isActive
+              ? onPressMethod
+              : () {
+                  showSnackbar(
+                      title: AppConstants.ERROR_LABEL.tr,
+                      message: !appUIController.isASRResponseGenerated
+                          ? AppConstants.ASR_NOT_GENERATED_ERROR_MSG.tr
+                          : appUIController.isUserRecording
+                              ? AppConstants.RECORDING_IN_PROGRESS.tr
+                              : appUIController.isTTSOutputPlaying
+                                  ? AppConstants.OUTPUT_PLAYING_ERROR_MSG.tr
+                                  : appUIController.selectedTargetLangNameInUI.isEmpty
+                                      ? AppConstants.SELECT_TARGET_LANG_ERROR_MSG.tr
+                                      : appUIController.hasSpeechToSpeechRequestsInitiated
+                                          ? AppConstants.NETWORK_REQS_IN_PROGRESS_ERROR_MSG.tr
+                                          : '');
                 },
           icon: Icon(
             currentIcon,
@@ -1080,65 +1128,4 @@ class PlayButton extends StatelessWidget {
       },
     );
   }
-}
-
-class SnackBarFormattedText extends StatelessWidget {
-  final String text;
-  final GETX_SNACK_BAR titleOrMessage;
-
-  const SnackBarFormattedText({
-    Key? key,
-    required this.text,
-    required this.titleOrMessage,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    TextStyle textStyle = titleOrMessage == GETX_SNACK_BAR.title
-        ? GoogleFonts.kodchasan(color: AppConstants.STANDARD_WHITE, fontSize: 30.w, fontWeight: FontWeight.w700)
-        : GoogleFonts.comfortaa(color: AppConstants.STANDARD_WHITE, fontSize: 20.w);
-    return AutoSizeText(text, maxLines: 1, overflow: TextOverflow.ellipsis, style: textStyle);
-  }
-}
-
-class SnackBarFormattedIcon extends StatelessWidget {
-  const SnackBarFormattedIcon({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Icon(
-      Icons.error_outline_rounded,
-      color: AppConstants.STANDARD_WHITE,
-      size: 30.w,
-    );
-  }
-}
-
-void showSnackbar({required String title, required String message}) {
-  Get.snackbar(
-    '',
-    '',
-    titleText: SnackBarFormattedText(
-      text: title,
-      titleOrMessage: GETX_SNACK_BAR.title,
-    ),
-    messageText: SnackBarFormattedText(
-      text: message,
-      titleOrMessage: GETX_SNACK_BAR.message,
-    ),
-    icon: const SnackBarFormattedIcon(),
-    snackPosition: SnackPosition.BOTTOM,
-    backgroundColor: AppConstants.STANDARD_BLACK.withOpacity(0.2),
-    borderRadius: 10.w,
-    margin: EdgeInsets.all(20.w),
-    barBlur: 40,
-    overlayColor: AppConstants.STANDARD_BLACK.withOpacity(0.80),
-    overlayBlur: 1,
-    colorText: AppConstants.STANDARD_WHITE,
-    duration: const Duration(seconds: 4),
-    isDismissible: true,
-    forwardAnimationCurve: Curves.easeOutBack,
-  );
 }

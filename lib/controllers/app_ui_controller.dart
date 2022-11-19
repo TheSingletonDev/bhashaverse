@@ -20,15 +20,29 @@ class AppUIController extends GetxController {
   String _selectedTargetLanguageInUI = '';
   String get selectedTargetLangNameInUI => _selectedTargetLanguageInUI;
   void changeTargetLanguage({required String selectedTargetLanguageName}) {
-    changeIsASRResponseGenerated(isASRResponseGenerated: false);
-    changeIsTransResponseGenerated(isTransResponseGenerated: false);
-    changeIsTTSResponseFileGenerated(isTTSResponseFileGenerated: false);
+    if (isASRResponseGenerated) {
+      //Enable record and update button
+      changeIsTransResponseGenerated(isTransResponseGenerated: false);
+      changeIsTTSResponseFileGenerated(isTTSResponseFileGenerated: false);
 
-    changeIsMaleTTSAvailable(isMaleTTSAvailable: false);
-    changeIsFemaleTTSAvailable(isFemaleTTSAvailable: false);
+      changeIsMaleTTSAvailable(isMaleTTSAvailable: false);
+      changeIsFemaleTTSAvailable(isFemaleTTSAvailable: false);
 
-    changeCurrentRequestStatusForUI(newStatus: AppConstants.INITIAL_CURRENT_STATUS_VALUE.tr);
-    _selectedTargetLanguageInUI = selectedTargetLanguageName;
+      changeCurrentRequestStatusForUI(newStatus: AppConstants.INITIAL_CURRENT_STATUS_VALUE.tr);
+      _selectedTargetLanguageInUI = selectedTargetLanguageName;
+    } else {
+      //Update Button should not be avaiable
+      changeIsASRResponseGenerated(isASRResponseGenerated: false);
+      changeIsTransResponseGenerated(isTransResponseGenerated: false);
+      changeIsTTSResponseFileGenerated(isTTSResponseFileGenerated: false);
+
+      changeIsMaleTTSAvailable(isMaleTTSAvailable: false);
+      changeIsFemaleTTSAvailable(isFemaleTTSAvailable: false);
+
+      changeCurrentRequestStatusForUI(newStatus: AppConstants.INITIAL_CURRENT_STATUS_VALUE.tr);
+      _selectedTargetLanguageInUI = selectedTargetLanguageName;
+    }
+
     update();
   }
 
@@ -80,6 +94,14 @@ class AppUIController extends GetxController {
   bool get hasSpeechToSpeechRequestsInitiated => _hasSpeechToSpeechRequestsInitiated;
   void changeHasSpeechToSpeechRequestsInitiated({required bool hasSpeechToSpeechRequestsInitiated}) {
     _hasSpeechToSpeechRequestsInitiated = hasSpeechToSpeechRequestsInitiated;
+    update();
+  }
+
+  // For Update Button only
+  bool _hasSpeechToSpeechUpdateRequestsInitiated = false;
+  bool get hasSpeechToSpeechUpdateRequestsInitiated => _hasSpeechToSpeechUpdateRequestsInitiated;
+  void changeHasSpeechToSpeechUpdateRequestsInitiated({required bool hasSpeechToSpeechUpdateRequestsInitiated}) {
+    _hasSpeechToSpeechUpdateRequestsInitiated = hasSpeechToSpeechUpdateRequestsInitiated;
     update();
   }
 

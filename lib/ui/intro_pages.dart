@@ -27,17 +27,17 @@ class IntroPagesState extends State<IntroPages> {
     Get.off(() => const HomePage());
   }
 
-  Widget _buildImage(String assetName, [double width = 20]) {
-    return ColorFiltered(
-      colorFilter:
-          const ColorFilter.matrix([0.2126, 0.7152, 0.0722, 0, 0, 0.2126, 0.7152, 0.0722, 0, 0, 0.2126, 0.7152, 0.0722, 0, 0, 0, 0, 0, 1, 0]),
-      child: Image.asset(
-        '${AppConstants.IMAGE_ASSETS_PATH}$assetName',
-        width: width,
-        fit: BoxFit.fitWidth,
-      ),
-    );
-  }
+  // Widget _buildImageMono(String assetName, [double width = 20]) {
+  //   return ColorFiltered(
+  //     colorFilter:
+  //         const ColorFilter.matrix([0.2126, 0.7152, 0.0722, 0, 0, 0.2126, 0.7152, 0.0722, 0, 0, 0.2126, 0.7152, 0.0722, 0, 0, 0, 0, 0, 1, 0]),
+  //     child: Image.asset(
+  //       '${AppConstants.IMAGE_ASSETS_PATH}$assetName',
+  //       width: width,
+  //       fit: BoxFit.fitWidth,
+  //     ),
+  //   );
+  // }
 
   Widget _buildImageColor(String assetName, [double width = 20]) {
     return Image.asset(

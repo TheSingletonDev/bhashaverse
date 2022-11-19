@@ -43,9 +43,11 @@ class AppConstants {
   static const String IMAGE_ASSETS_PATH = 'assets/images/';
 
   static const String RECORD_BUTTON_TEXT = 'Record';
+  static const String STOP_BUTTON_TEXT = 'Stop';
+  static const String UPDATE_BUTTON_TEXT = 'Update';
+  static const String UPDATING_BUTTON_TEXT = 'Updating';
   static const String PLAY_BUTTON_TEXT = 'Play';
   static const String PLAYING_BUTTON_TEXT = 'Playing';
-  static const String STOP_BUTTON_TEXT = 'Stop';
   static const String SPEECH_TO_TEXT_HEADER_LABEL = 'SPEECH TO TEXT';
   static const String TRANSLATION_HEADER_LABEL = 'TRANSLATION';
   static const String SOURCE_DROPDOWN_LABEL = 'SOURCE';
@@ -96,6 +98,7 @@ class AppConstants {
   static const String OUTPUT_PLAYING_ERROR_MSG = 'Audio Playback in progress !';
   static const String SELECT_SOURCE_LANG_ERROR_MSG = 'Please select a Source Language first !';
   static const String SELECT_TARGET_LANG_ERROR_MSG = 'Please select a Target Language first !';
+  static const String ASR_NOT_GENERATED_ERROR_MSG = 'Please generate ASR output first !';
   static const String TTS_NOT_GENERATED_ERROR_MSG = 'Please generate TTS output first !';
   static const String NETWORK_REQS_IN_PROGRESS_ERROR_MSG = 'Currently processing previous requests !';
   static const String MALE_FEMALE_TTS_UNAVAILABLE = '%replaceContent% voice output is not available !';
@@ -104,14 +107,17 @@ class AppConstants {
   static const String CLIPBOARD_TEXT_COPY_SUCCESS = 'Text copied to Clipboard!';
 
   static const String DEVELOPED_BY_LABEL = 'Developed By';
-  static const String DEVELOPED_BY = 'Himanshu Gupta (Ernst & Young)';
+  static const String DEVELOPED_BY = 'Himanshu Gupta';
   static const String DEVELOPED_BY_ORG_LABEL = 'Organisations';
   static const String DEVELOPED_BY_ORG_CONTENT = 'EkStep, Ernst & Young, MeitY';
   static const String APPLICATION_VERSION_LABEL = 'Version';
-  static const String APPLICATION_VERSION = '1.5.1';
+  static const String APPLICATION_DOWNLOAD_LABEL = 'Download';
+  static const String APPLICATION_VERSION = '2.1.0';
 
   static const String HOMEPAGE_TOP_RIGHT_IMAGE = 'connected_dots_top_right.webp';
   static const String HOMEPAGE_BOTTOM_LEFT_IMAGE = 'connected_dots_bottom_left.webp';
+
+  static const String NEW_VERSION_URL = 'https://bit.ly/3Nj43Dj';
 
   static const STANDARD_WHITE = Color.fromARGB(255, 240, 240, 240);
   static const STANDARD_OFF_WHITE = Color.fromARGB(255, 90, 90, 90);
