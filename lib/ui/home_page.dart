@@ -474,7 +474,7 @@ class ASROutput extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetBuilder<AppUIController>(
       builder: (appUIController) {
-        SpeechToSpeechController speechToSpeechController = Get.find<SpeechToSpeechController>();
+        SpeechToSpeechController speechToSpeechController = Get.find();
         return appUIController.isASRResponseGenerated
             ? GestureDetector(
                 onTap: () {
@@ -505,7 +505,7 @@ class TransOutput extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetBuilder<AppUIController>(
       builder: (appUIController) {
-        SpeechToSpeechController speechToSpeechController = Get.find<SpeechToSpeechController>();
+        SpeechToSpeechController speechToSpeechController = Get.find();
         return appUIController.isTransResponseGenerated
             ? GestureDetector(
                 onTap: () {
