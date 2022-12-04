@@ -64,13 +64,13 @@ class AppConstants {
   static const String SUCCESS_LABEL = 'Success';
 
   static const String INTRO_PAGE_1_HEADER_TEXT = 'Speech To Speech Translation';
-  static const String INTRO_PAGE_1_SUB_HEADER_TEXT = 'Convert your voice in one Indian language to another Indian language';
+  static const String INTRO_PAGE_1_SUB_HEADER_TEXT = 'Translate your voice in one Indian language to another Indian language';
 
   static const String INTRO_PAGE_2_HEADER_TEXT = 'Speech Recognition';
   static const String INTRO_PAGE_2_SUB_HEADER_TEXT = 'Automatically recognize and convert your voice to text';
 
   static const String INTRO_PAGE_3_HEADER_TEXT = 'Language Trasnlation';
-  static const String INTRO_PAGE_3_SUB_HEADER_TEXT = 'Convert sentences from one Indian language to another';
+  static const String INTRO_PAGE_3_SUB_HEADER_TEXT = 'Translate sentences from one Indian language to another';
 
   static const String INTRO_PAGE_DIRECT_BTN_TEXT = 'Let\'s Translate Right Away!';
   static const String INTRO_PAGE_DONE_BTN_TEXT = 'DONE';
