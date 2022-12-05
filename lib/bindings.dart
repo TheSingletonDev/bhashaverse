@@ -8,7 +8,7 @@ import 'controllers/recorder_controller.dart';
 import 'controllers/speech_to_speech_controller.dart';
 import 'data/translation_app_api_client.dart';
 
-class TranslationAppBindings extends Bindings {
+class TranslationAppBindings implements Bindings {
   @override
   void dependencies() {
     Get.put(TranslationAppAPIClient.getAPIClientInstance(), permanent: true);
