@@ -65,16 +65,16 @@ dev_dependencies:
 flutter_icons:
   android: "launcher_icon"
   ios: true
-  image_path: "assets/icons/BhashaverseIcon.png"
+  image_path: "assets/icons/Bhashaverse.png"
   min_sdk_android: 29 # android min sdk min:16, default 21
   web:
     generate: true
-    image_path: "assets/icons/BhashaverseIcon.png"
+    image_path: "assets/icons/Bhashaverse.png"
     # background_color: "#hexcode"
     # theme_color: "#hexcode"
   windows:
     generate: true
-    image_path: "assets/icons/BhashaverseIcon.png"
+    image_path: "assets/icons/Bhashaverse.png"
     icon_size: 48 # min:48, max:256, default: 48
 
 # The following section is specific to Flutter packages.
