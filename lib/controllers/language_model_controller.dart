@@ -59,13 +59,13 @@ class LanguageModelController extends GetxController {
                     responseList.firstWhere((eachTaskResponse) => eachTaskResponse['taskType'] == 'translation')['modelInstance'];
                 _availableTTSModels = responseList.firstWhere((eachTaskResponse) => eachTaskResponse['taskType'] == 'tts')['modelInstance'];
 
-                //Retrieve ASR Models
+                //Retrieve Unique ASR Models
                 Set<String> availableASRModelLanguagesSet = {};
                 for (Data eachASRModel in _availableASRModels.data) {
                   availableASRModelLanguagesSet.add(eachASRModel.languages[0].sourceLanguage.toString());
                 }
 
-                //Retrieve TTS Models
+                //Retrieve Unique TTS Models
                 Set<String> availableTTSModelLanguagesSet = {};
                 for (Data eachTTSModel in _availableTTSModels.data) {
                   availableTTSModelLanguagesSet.add(eachTTSModel.languages[0].sourceLanguage.toString());
