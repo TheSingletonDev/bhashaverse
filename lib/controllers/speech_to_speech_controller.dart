@@ -16,9 +16,6 @@ class SpeechToSpeechController extends GetxController {
   late TranslationAppAPIClient _translationAppAPIClient;
   late LanguageModelController _languageModelController;
 
-  // String asrResponseText = '';
-  // String transResponseText = '';
-
   late String _asrResponseText;
   String get asrResponseText => _asrResponseText;
 
@@ -44,7 +41,96 @@ class SpeechToSpeechController extends GetxController {
   this new method in non-future type method with .then() appearing once!*/
 
   void sendSpeechToSpeechRequests({required String base64AudioContent}) {
-    _sendSpeechToSpeechRequestsInternal(base64AudioContent: base64AudioContent).then((_) {});
+    // _sendSpeechToSpeechRequestsInternal(base64AudioContent: base64AudioContent).then((_) {});
+    _getS2SOutputForBothGender(base64AudioContent: base64AudioContent).then((_) {});
+  }
+
+  Future _getS2SOutputForBothGender({required String base64AudioContent}) async {
+    try {
+      _appUIController.changeHasSpeechToSpeechRequestsInitiated(hasSpeechToSpeechRequestsInitiated: true);
+      _appUIController.changeHasS2SRequestInitiated(hasS2SRequestInitiated: true);
+
+      String selectedSourceLangCodeInUI =
+          AppConstants.getLanguageCodeOrName(value: _appUIController.selectedSourceLangNameInUI, returnWhat: LANGUAGE_MAP.languageCode);
+
+      String selectedTargetLangCodeInUI =
+          AppConstants.getLanguageCodeOrName(value: _appUIController.selectedTargetLangNameInUI, returnWhat: LANGUAGE_MAP.languageCode);
+
+      _appUIController.changeCurrentRequestStatusForUI(
+          newStatus: AppConstants.S2S_REQ_STATUS_MSG.tr
+              .replaceFirst('%replaceContent%', '${_appUIController.selectedSourceLangNameInUI}-${_appUIController.selectedTargetLangNameInUI}'));
+
+      //Below two lines so that any changes are made to a new map, not the original format
+      var s2sPayloadToSendForMale = {};
+      s2sPayloadToSendForMale.addAll(AppConstants.S2S_PAYLOAD_FORMAT);
+      s2sPayloadToSendForMale['serviceId'] = '';
+      s2sPayloadToSendForMale['audio'][0]['audioContent'] = base64AudioContent;
+      s2sPayloadToSendForMale['config']['language']['sourceLanguage'] = selectedSourceLangCodeInUI;
+      s2sPayloadToSendForMale['config']['language']['targetLanguage'] = selectedTargetLangCodeInUI;
+      s2sPayloadToSendForMale['config']['gender'] = 'male';
+
+      var s2sPayloadToSendForFemale = {};
+      s2sPayloadToSendForFemale.addAll(s2sPayloadToSendForMale);
+      s2sPayloadToSendForFemale['config']['gender'] = 'female';
+
+      List<Map<String, dynamic>> responseList =
+          await _translationAppAPIClient.sendS2SReqForBothGender(s2sPayloadList: [s2sPayloadToSendForMale, s2sPayloadToSendForFemale]);
+
+      if (responseList.isNotEmpty) {
+        String s2sMaleAudioBase64String = responseList[0]['output']['audio'][0]['audioContent'] ?? '';
+        String s2sFemaleAudioBase64String = responseList[1]['output']['audio'][0]['audioContent'] ?? '';
+
+        await _hardwareRequestsController.requestPermissions();
+        String appDocPath = await _hardwareRequestsController.getAppDirPath();
+
+        _asrResponseText = asrOutputString;
+        _appUIController.changeIsASRResponseGenerated(isASRResponseGenerated: true);
+
+        _transResponseText = transOutputString;
+        _appUIController.changeIsTransResponseGenerated(isTransResponseGenerated: true);
+
+        if (s2sMaleAudioBase64String.isNotEmpty) {
+          var maleFileAsBytes = base64Decode(s2sMaleAudioBase64String);
+          String maleTTSAudioFileName = '$appDocPath/TTSMaleAudio.wav';
+          final maleAudioFile = File(maleTTSAudioFileName);
+          await maleAudioFile.writeAsBytes(maleFileAsBytes);
+          _ttsMaleAudioFilePath = maleTTSAudioFileName;
+          _appUIController.changeIsMaleTTSAvailable(isMaleTTSAvailable: true);
+        }
+
+        if (s2sFemaleAudioBase64String.isNotEmpty) {
+          var femaleFileAsBytes = base64Decode(s2sFemaleAudioBase64String);
+          String femaleTTSAudioFileName = '$appDocPath/TTSFemaleAudio.wav';
+          final femaleAudioFile = File(femaleTTSAudioFileName);
+          await femaleAudioFile.writeAsBytes(femaleFileAsBytes);
+          _ttsFemaleAudioFilePath = femaleTTSAudioFileName;
+          _appUIController.changeIsFemaleTTSAvailable(isFemaleTTSAvailable: true);
+        }
+
+        _appUIController.changeHasSpeechToSpeechRequestsInitiated(hasSpeechToSpeechRequestsInitiated: false);
+        _appUIController.changeHasSpeechToSpeechUpdateRequestsInitiated(hasSpeechToSpeechUpdateRequestsInitiated: false); // Only for Update Button
+
+        _appUIController.changeHasS2SRequestInitiated(hasS2SRequestInitiated: false);
+
+        if (_appUIController.isMaleTTSAvailable && _appUIController.isFemaleTTSAvailable) {
+          _appUIController.changeIsTTSResponseFileGenerated(isTTSResponseFileGenerated: true);
+          _appUIController.changeSelectedGenderForTTSInUI(selectedGenderForTTS: GENDER.female);
+        } else if (_appUIController.isMaleTTSAvailable && !_appUIController.isFemaleTTSAvailable) {
+          _appUIController.changeIsTTSResponseFileGenerated(isTTSResponseFileGenerated: true);
+          _appUIController.changeSelectedGenderForTTSInUI(selectedGenderForTTS: GENDER.male);
+        } else if (!_appUIController.isMaleTTSAvailable && _appUIController.isFemaleTTSAvailable) {
+          _appUIController.changeIsTTSResponseFileGenerated(isTTSResponseFileGenerated: true);
+          _appUIController.changeSelectedGenderForTTSInUI(selectedGenderForTTS: GENDER.female);
+        } else {
+          _appUIController.changeIsTTSResponseFileGenerated(isTTSResponseFileGenerated: false);
+        }
+      }
+    } on Exception {
+      _appUIController.changeHasSpeechToSpeechRequestsInitiated(hasSpeechToSpeechRequestsInitiated: false);
+      _appUIController.changeHasSpeechToSpeechUpdateRequestsInitiated(hasSpeechToSpeechUpdateRequestsInitiated: false); //Only for Update Button
+      _appUIController.changeHasS2SRequestInitiated(hasS2SRequestInitiated: false);
+      _appUIController.changeIsTTSResponseFileGenerated(isTTSResponseFileGenerated: false);
+    }
   }
 
   Future _sendSpeechToSpeechRequestsInternal({required String base64AudioContent}) async {
@@ -169,102 +255,15 @@ class SpeechToSpeechController extends GetxController {
     List<String> availableASRModelsForSelectedLangInUIDefault = [];
     List<String> availableASRModelsForSelectedLangInUI = [];
     bool isAtLeastOneDefaultModelTypeFound = false;
-    String selectedSourceLangCodeInUI = AppConstants.getLanguageCodeOrName(
-        value: _appUIController.selectedSourceLangNameInUI, returnWhat: LANGUAGE_MAP.languageCode, lang_code_map: AppConstants.LANGUAGE_CODE_MAP);
+    String selectedSourceLangCodeInUI =
+        AppConstants.getLanguageCodeOrName(value: _appUIController.selectedSourceLangNameInUI, returnWhat: LANGUAGE_MAP.languageCode);
 
-    List<String> availableSubmittersList = [];
-    for (var eachAvailableASRModelData in _languageModelController.availableASRModels.data) {
-      if (eachAvailableASRModelData.languages[0].sourceLanguage == selectedSourceLangCodeInUI) {
-        if (!availableSubmittersList.contains(eachAvailableASRModelData.name.toLowerCase())) {
-          availableSubmittersList.add(eachAvailableASRModelData.name.toLowerCase());
-        }
+    String serviceId = '';
+    for (var eachMap in AppConstants.ASR_SERVICE_ID_MAP) {
+      if (selectedSourceLangCodeInUI == eachMap['languageCode']) {
+        serviceId = eachMap['serviceId']!;
       }
     }
-
-    availableSubmittersList = availableSubmittersList.toSet().toList();
-
-    //Check OpenAI model availability
-    String openAIModelName = '';
-    for (var eachSubmitter in availableSubmittersList) {
-      if (eachSubmitter.toLowerCase().contains(AppConstants.DEFAULT_MODEL_TYPES[AppConstants.TYPES_OF_MODELS_LIST[0]]!.split(',')[0].toLowerCase())) {
-        openAIModelName = eachSubmitter;
-      }
-    }
-
-    //Check AI4Bharat Batch model availability
-    String ai4BharatBatchModelName = '';
-    for (var eachSubmitter in availableSubmittersList) {
-      if (eachSubmitter.toLowerCase().contains(AppConstants.DEFAULT_MODEL_TYPES[AppConstants.TYPES_OF_MODELS_LIST[0]]!.split(',')[1].toLowerCase()) &&
-          eachSubmitter.toLowerCase().contains(AppConstants.DEFAULT_MODEL_TYPES[AppConstants.TYPES_OF_MODELS_LIST[0]]!.split(',')[2].toLowerCase())) {
-        ai4BharatBatchModelName = eachSubmitter;
-      }
-    }
-
-    // //Check AI4Bharat Stream model availability
-    // String ai4BharatStreamModelName = '';
-    // for (var eachSubmitter in availableSubmittersList) {
-    //   if (eachSubmitter.toLowerCase().contains(AppConstants.DEFAULT_MODEL_TYPES[AppConstants.TYPES_OF_MODELS_LIST[0]]!.split(',')[1].toLowerCase()) &&
-    //       eachSubmitter.toLowerCase().contains(AppConstants.DEFAULT_MODEL_TYPES[AppConstants.TYPES_OF_MODELS_LIST[0]]!.split(',')[3].toLowerCase())) {
-    //     ai4BharatStreamModelName = eachSubmitter;
-    //   }
-    // }
-
-    //Check any AI4Bharat model availability
-    String ai4BharatModelName = '';
-    for (var eachSubmitter in availableSubmittersList) {
-      if (eachSubmitter.toLowerCase().contains(AppConstants.DEFAULT_MODEL_TYPES[AppConstants.TYPES_OF_MODELS_LIST[0]]!.split(',')[1].toLowerCase()) &&
-          !eachSubmitter
-              .toLowerCase()
-              .contains(AppConstants.DEFAULT_MODEL_TYPES[AppConstants.TYPES_OF_MODELS_LIST[0]]!.split(',')[2].toLowerCase()) &&
-          !eachSubmitter
-              .toLowerCase()
-              .contains(AppConstants.DEFAULT_MODEL_TYPES[AppConstants.TYPES_OF_MODELS_LIST[0]]!.split(',')[3].toLowerCase())) {
-        ai4BharatModelName = eachSubmitter;
-      }
-    }
-
-    if (openAIModelName.isNotEmpty) {
-      for (var eachAvailableASRModelData in _languageModelController.availableASRModels.data) {
-        if (eachAvailableASRModelData.name.toLowerCase() == openAIModelName.toLowerCase()) {
-          availableASRModelsForSelectedLangInUIDefault.add(eachAvailableASRModelData.modelId);
-          isAtLeastOneDefaultModelTypeFound = true;
-        }
-      }
-    } else if (ai4BharatBatchModelName.isNotEmpty) {
-      for (var eachAvailableASRModelData in _languageModelController.availableASRModels.data) {
-        if (eachAvailableASRModelData.name.toLowerCase() == ai4BharatBatchModelName.toLowerCase()) {
-          availableASRModelsForSelectedLangInUIDefault.add(eachAvailableASRModelData.modelId);
-          isAtLeastOneDefaultModelTypeFound = true;
-        }
-      }
-    }
-    // else if (ai4BharatStreamModelName.isNotEmpty) {
-    //   for (var eachAvailableASRModelData in _languageModelController.availableASRModels.data) {
-    //     if (eachAvailableASRModelData.name.toLowerCase() == ai4BharatStreamModelName.toLowerCase()) {
-    //       availableASRModelsForSelectedLangInUIDefault.add(eachAvailableASRModelData.modelId);
-    //       isAtLeastOneDefaultModelTypeFound = true;
-    //     }
-    //   }
-    // }
-    else if (ai4BharatModelName.isNotEmpty) {
-      for (var eachAvailableASRModelData in _languageModelController.availableASRModels.data) {
-        if (eachAvailableASRModelData.name.toLowerCase() == ai4BharatModelName.toLowerCase()) {
-          availableASRModelsForSelectedLangInUIDefault.add(eachAvailableASRModelData.modelId);
-          isAtLeastOneDefaultModelTypeFound = true;
-        }
-      }
-    } else {
-      for (var eachAvailableASRModelData in _languageModelController.availableASRModels.data) {
-        if (eachAvailableASRModelData.languages[0].sourceLanguage == selectedSourceLangCodeInUI) {
-          availableASRModelsForSelectedLangInUI.add(eachAvailableASRModelData.modelId);
-        }
-      }
-    }
-
-    //Either select default model (vakyansh for now) or any random model from the available list.
-    String asrModelIDToUse = isAtLeastOneDefaultModelTypeFound
-        ? availableASRModelsForSelectedLangInUIDefault[Random().nextInt(availableASRModelsForSelectedLangInUIDefault.length)]
-        : availableASRModelsForSelectedLangInUI[Random().nextInt(availableASRModelsForSelectedLangInUI.length)];
 
     //Below two lines so that any changes are made to a new map, not the original format
     var asrPayloadToSend = {};
@@ -272,10 +271,9 @@ class SpeechToSpeechController extends GetxController {
 
     //print('ASR Model ID used- https://bhashini.gov.in/ulca/search-model/$asrModelIDToUse');
 
-    asrPayloadToSend['modelId'] = asrModelIDToUse;
-    asrPayloadToSend['task'] = AppConstants.TYPES_OF_MODELS_LIST[0];
-    asrPayloadToSend['audioContent'] = base64AudioContent;
-    asrPayloadToSend['source'] = selectedSourceLangCodeInUI;
+    asrPayloadToSend['serviceId'] = serviceId;
+    asrPayloadToSend['audio'][0]['audioContent'] = base64AudioContent;
+    asrPayloadToSend['config']['language']['sourceLanguage'] = selectedSourceLangCodeInUI;
 
     Map<dynamic, dynamic> response = await _translationAppAPIClient.sendASRRequest(asrPayload: asrPayloadToSend);
     if (response.isEmpty) {
@@ -289,11 +287,11 @@ class SpeechToSpeechController extends GetxController {
     List<String> availableTransModelsForSelectedLangInUIDefault = [];
     List<String> availableTransModelsForSelectedLangInUI = [];
     bool isAtLeastOneDefaultModelTypeFound = false;
-    String selectedSourceLangCodeInUI = AppConstants.getLanguageCodeOrName(
-        value: _appUIController.selectedSourceLangNameInUI, returnWhat: LANGUAGE_MAP.languageCode, lang_code_map: AppConstants.LANGUAGE_CODE_MAP);
+    String selectedSourceLangCodeInUI =
+        AppConstants.getLanguageCodeOrName(value: _appUIController.selectedSourceLangNameInUI, returnWhat: LANGUAGE_MAP.languageCode);
 
-    String selectedTargetLangCodeInUI = AppConstants.getLanguageCodeOrName(
-        value: _appUIController.selectedTargetLangNameInUI, returnWhat: LANGUAGE_MAP.languageCode, lang_code_map: AppConstants.LANGUAGE_CODE_MAP);
+    String selectedTargetLangCodeInUI =
+        AppConstants.getLanguageCodeOrName(value: _appUIController.selectedTargetLangNameInUI, returnWhat: LANGUAGE_MAP.languageCode);
 
     List<String> availableSubmittersList = [];
     for (var eachAvailableTransModelData in _languageModelController.availableTranslationModels.data) {
@@ -356,8 +354,8 @@ class SpeechToSpeechController extends GetxController {
     List<String> availableTTSModelsForSelectedLangInUIDefault = [];
     List<String> availableTTSModelsForSelectedLangInUI = [];
     bool isAtLeastOneDefaultModelTypeFound = false;
-    String selectedTargetLangCodeInUI = AppConstants.getLanguageCodeOrName(
-        value: _appUIController.selectedTargetLangNameInUI, returnWhat: LANGUAGE_MAP.languageCode, lang_code_map: AppConstants.LANGUAGE_CODE_MAP);
+    String selectedTargetLangCodeInUI =
+        AppConstants.getLanguageCodeOrName(value: _appUIController.selectedTargetLangNameInUI, returnWhat: LANGUAGE_MAP.languageCode);
 
     List<String> availableSubmittersList = [];
     for (var eachAvailableTTSModelData in _languageModelController.availableTTSModels.data) {

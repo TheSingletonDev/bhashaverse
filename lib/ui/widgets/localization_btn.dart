@@ -34,9 +34,11 @@ class LangSwitchButton extends StatelessWidget {
                     itemBuilder: (context, index) {
                       String eachLanguage = AppConstants.AVAILABLE_LOCALIZATION_LANGUAGES_MAP['language_codes']![index]['language_name'].toString();
                       String newLocale = AppConstants.getLanguageCodeOrName(
-                          value: eachLanguage,
-                          returnWhat: LANGUAGE_MAP.languageCode,
-                          lang_code_map: AppConstants.AVAILABLE_LOCALIZATION_LANGUAGES_MAP);
+                        value: eachLanguage,
+                        returnWhat: LANGUAGE_MAP.languageCode,
+                      );
+                      // lang_code_map: AppConstants.AVAILABLE_LOCALIZATION_LANGUAGES_MAP,
+                      // );
 
                       return InkWell(
                         onTap: () {

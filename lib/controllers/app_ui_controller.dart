@@ -76,6 +76,15 @@ class AppUIController extends GetxController {
     update();
   }
 
+  /* ASR and Translation Request Initiation is not needed coz
+  for TTS we are showing loading symbol instead of Play Button*/
+  bool _hasS2SRequestInitiated = false;
+  bool get hasS2SRequestInitiated => _hasS2SRequestInitiated;
+  void changeHasS2SRequestInitiated({required bool hasS2SRequestInitiated}) {
+    _hasS2SRequestInitiated = hasS2SRequestInitiated;
+    update();
+  }
+
   bool _isTTSResponseFileGenerated = false;
   bool get isTTSResponseFileGenerated => _isTTSResponseFileGenerated;
   void changeIsTTSResponseFileGenerated({required bool isTTSResponseFileGenerated}) {

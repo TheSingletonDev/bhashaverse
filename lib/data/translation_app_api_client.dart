@@ -93,6 +93,33 @@ class TranslationAppAPIClient {
     }
   }
 
+  Future<dynamic> sendS2SReqForBothGender({required List<dynamic> s2sPayloadList}) async {
+    try {
+      final s2sResponsesList = await Future.wait(s2sPayloadList.map((eachTaskPayload) => _dio.post(AppConstants.S2S_REQ_URL,
+          data: eachTaskPayload,
+          options:
+              Options(headers: {'Content-Type': 'application/json', 'Accept': '*/*', 'authorization': 'eacb7d3e-99fd-49ba-a32f-4ee0b2faa3db'}))));
+
+      List<Map<String, dynamic>> s2sOutputResponsesList = [];
+
+      /*
+      Could have done asrTranslationTtsResponses.map((e){}) but to access the index of each element,
+      use .asMap().entries.map((e){}). Index: e.key, Original Value: e.value
+      */
+      s2sResponsesList.asMap().entries.map((eachResponse) {
+        if (eachResponse.value.statusCode == 200) {
+          s2sOutputResponsesList.add({'gender': s2sPayloadList[eachResponse.key]['config']['gender'], 'output': eachResponse.value.data});
+        } else {
+          s2sOutputResponsesList.add({'gender': s2sPayloadList[eachResponse.key]['config']['gender'], 'output': eachResponse.value.data});
+        }
+      }).toList();
+
+      return s2sOutputResponsesList;
+    } on Exception {
+      return [];
+    }
+  }
+
   Future<dynamic> sendTTSReqForBothGender({required List<dynamic> ttsPayloadList}) async {
     try {
       final ttsResponsesList = await Future.wait(ttsPayloadList.map((eachTaskPayload) => _dio.post(AppConstants.TTS_REQ_URL,

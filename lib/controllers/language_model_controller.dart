@@ -40,74 +40,15 @@ class LanguageModelController extends GetxController {
   SearchModel get availableTTSModels => _availableTTSModels;
 
   void calcAvailableSourceAndTargetLanguages() {
-    List<dynamic> taskPayloads = [];
-    for (String eachModelType in AppConstants.TYPES_OF_MODELS_LIST) {
-      taskPayloads.add({"task": eachModelType, "sourceLanguage": "", "targetLanguage": "", "domain": "All", "submitter": "All", "userId": null});
+    _allAvailableSourceLanguages.clear();
+    _allAvailableTargetLanguages.clear();
+    _appUIController.changeAreModelsLoadedSuccessfully(areModelsLoadedSuccessfully: false);
+
+    for (String eachLangCode in AppConstants.AVAILABLE_LANGUAGES) {
+      _allAvailableSourceLanguages.add(AppConstants.getLanguageCodeOrName(value: eachLangCode, returnWhat: LANGUAGE_MAP.languageName));
+      _allAvailableTargetLanguages.add(AppConstants.getLanguageCodeOrName(value: eachLangCode, returnWhat: LANGUAGE_MAP.languageName));
     }
-
-    _translationAppAPIClient.getAllModels(taskPayloads: taskPayloads).then((responseList) {
-      _allAvailableSourceLanguages.clear();
-      _allAvailableTargetLanguages.clear();
-      responseList.isEmpty
-          ? () {
-              _appUIController.changeAreModelsLoadedSuccessfully(areModelsLoadedSuccessfully: false);
-            }()
-          : () {
-              try {
-                _availableASRModels = responseList.firstWhere((eachTaskResponse) => eachTaskResponse['taskType'] == 'asr')['modelInstance'];
-                _availableTranslationModels =
-                    responseList.firstWhere((eachTaskResponse) => eachTaskResponse['taskType'] == 'translation')['modelInstance'];
-                _availableTTSModels = responseList.firstWhere((eachTaskResponse) => eachTaskResponse['taskType'] == 'tts')['modelInstance'];
-
-                //Retrieve ASR Models
-                Set<String> availableASRModelLanguagesSet = {};
-                for (Data eachASRModel in _availableASRModels.data) {
-                  availableASRModelLanguagesSet.add(eachASRModel.languages[0].sourceLanguage.toString());
-                }
-
-                //Retrieve TTS Models
-                Set<String> availableTTSModelLanguagesSet = {};
-                for (Data eachTTSModel in _availableTTSModels.data) {
-                  availableTTSModelLanguagesSet.add(eachTTSModel.languages[0].sourceLanguage.toString());
-                }
-
-                var availableTranslationModelsList = _availableTranslationModels.data;
-
-                if (availableASRModelLanguagesSet.isEmpty || availableTTSModelLanguagesSet.isEmpty || availableTranslationModelsList.isEmpty) {
-                  throw Exception('Models not retrieved!');
-                }
-
-                Set<String> allASRAndTTSLangCombinationsSet = {};
-                for (String eachASRAvailableLang in availableASRModelLanguagesSet) {
-                  for (String eachTTSAvailableLang in availableTTSModelLanguagesSet) {
-                    allASRAndTTSLangCombinationsSet.add('$eachASRAvailableLang-$eachTTSAvailableLang');
-                  }
-                }
-                Set<String> availableTransModelLangCombinationsSet = {};
-                for (Data eachTranslationModel in availableTranslationModelsList) {
-                  availableTransModelLangCombinationsSet
-                      .add('${eachTranslationModel.languages[0].sourceLanguage}-${eachTranslationModel.languages[0].targetLanguage}');
-                }
-
-                Set<String> canUseSourceAndTargetLangSet = allASRAndTTSLangCombinationsSet.intersection(availableTransModelLangCombinationsSet);
-
-                for (String eachUseableLangPair in canUseSourceAndTargetLangSet) {
-                  _allAvailableSourceLanguages.add(AppConstants.getLanguageCodeOrName(
-                      value: eachUseableLangPair.split('-')[0],
-                      returnWhat: LANGUAGE_MAP.languageName,
-                      lang_code_map: AppConstants.LANGUAGE_CODE_MAP));
-                  _allAvailableTargetLanguages.add(AppConstants.getLanguageCodeOrName(
-                      value: eachUseableLangPair.split('-')[1],
-                      returnWhat: LANGUAGE_MAP.languageName,
-                      lang_code_map: AppConstants.LANGUAGE_CODE_MAP));
-                }
-                Future.delayed(const Duration(seconds: 2))
-                    .then((value) => _appUIController.changeAreModelsLoadedSuccessfully(areModelsLoadedSuccessfully: true));
-              } on Exception {
-                _appUIController.changeAreModelsLoadedSuccessfully(areModelsLoadedSuccessfully: false);
-              }
-            }();
-    });
+    _appUIController.changeAreModelsLoadedSuccessfully(areModelsLoadedSuccessfully: true);
   }
 
   void changeSelectedSourceLangAndCalcTargetLangs({required String selectedSourceLanguageName}) {
@@ -120,22 +61,13 @@ class LanguageModelController extends GetxController {
     _appUIController.changeIsFemaleTTSAvailable(isFemaleTTSAvailable: false);
     _appUIController.changeCurrentRequestStatusForUI(newStatus: AppConstants.INITIAL_CURRENT_STATUS_VALUE.tr);
 
-    Set<String> availableTranslationModelsTargetLangForSelectedSourceLang = {};
-    var availableTranslationModelsList = _availableTranslationModels.data;
+    Set<String> availableTranslationModelsTargetLangForSelectedSourceLang = AppConstants.AVAILABLE_LANGUAGES
+        .where((element) => AppConstants.getLanguageCodeOrName(value: element, returnWhat: LANGUAGE_MAP.languageName) != selectedSourceLanguageName)
+        .toSet();
 
-    for (var eachAvailableModel in availableTranslationModelsList) {
-      if (eachAvailableModel.languages[0].sourceLanguage ==
-          AppConstants.getLanguageCodeOrName(
-              value: selectedSourceLanguageName, returnWhat: LANGUAGE_MAP.languageCode, lang_code_map: AppConstants.LANGUAGE_CODE_MAP)) {
-        availableTranslationModelsTargetLangForSelectedSourceLang.add(AppConstants.getLanguageCodeOrName(
-            value: eachAvailableModel.languages[0].targetLanguage.toString(),
-            returnWhat: LANGUAGE_MAP.languageName,
-            lang_code_map: AppConstants.LANGUAGE_CODE_MAP));
-      }
+    for (String eachLangCode in availableTranslationModelsTargetLangForSelectedSourceLang) {
+      _availableTargetLangsForSelectedSourceLang.add(AppConstants.getLanguageCodeOrName(value: eachLangCode, returnWhat: LANGUAGE_MAP.languageName));
     }
-
-    _availableTargetLangsForSelectedSourceLang
-        .addAll(availableTranslationModelsTargetLangForSelectedSourceLang.intersection(allAvailableTargetLanguages));
 
     _appUIController.chnageAreTargetLangForSelectedSourceLangLoaded(areTargetLangForSelectedSourceLangLoaded: true);
     _appUIController.changeSourceLanguage(selectedSourceLanguageInUI: selectedSourceLanguageName);

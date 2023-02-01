@@ -65,7 +65,7 @@ class HomePage extends StatelessWidget {
                             height: 0.045.sh,
                             child: Padding(
                               padding: EdgeInsets.only(top: 6.h),
-                              child: const LangSwitchButton(),
+                              // child: const LangSwitchButton(),
                             ),
                           ),
                         ),

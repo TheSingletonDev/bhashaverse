@@ -33,12 +33,13 @@ class AppConstants {
 
   static const String ASR_CALLBACK_AZURE_URL = 'https://meity-dev-asr.ulcacontrib.org/asr/v1/recognize';
   static const String ASR_CALLBACK_CDAC_URL = 'https://cdac.ulcacontrib.org/asr/v1/recognize';
-  static const String STS_BASE_URL = 'https://meity-auth.ulcacontrib.org/ulca/apis';
+  static const String STS_BASE_URL = 'https://api.dhruva.ai4bharat.org';
 
   static const String SEARCH_REQ_URL = '/v0/model/search';
-  static const String ASR_REQ_URL = '/asr/v1/model/compute';
+  static const String ASR_REQ_URL = '/services/inference/asr';
   static const String TRANS_REQ_URL = '/v0/model/compute';
   static const String TTS_REQ_URL = '/v0/model/compute';
+  static const String S2S_REQ_URL = '/services/inference/s2s';
 
   static const String IMAGE_ASSETS_PATH = 'assets/images/';
 
@@ -83,6 +84,8 @@ class AppConstants {
   static const String INITIAL_CURRENT_STATUS_VALUE = 'Initiate new Speech to Speech request !';
   static const String USER_VOICE_RECORDING_STATUS_MSG = 'User voice recording in progress ...';
 
+  static const String S2S_REQ_STATUS_MSG = 'Speech to Speech for %replaceContent% voice in progress !';
+
   static const String SPEECH_RECG_REQ_STATUS_MSG = 'Speech Recognition for %replaceContent% voice in progress !';
   static const String SPEECH_RECG_SUCCESS_STATUS_MSG = 'Speech Recognition in %replaceContent% completed !';
   static const String SPEECH_RECG_FAIL_STATUS_MSG = 'Speech Recognition in %replaceContent% Failed !';
@@ -126,30 +129,49 @@ class AppConstants {
   static const STANDARD_GREEN = Color.fromARGB(235, 0, 152, 68);
   static const STANDARD_BLUE = Color.fromARGB(235, 13, 58, 169);
 
+  static final AVAILABLE_LANGUAGES = ['en', 'hi', 'bn', 'gu', 'mr', 'or', 'pa', 'kn', 'ml', 'ta', 'te'];
+
+  static final ASR_SERVICE_ID_MAP = [
+    {'languageCode': 'en', 'serviceId': 'ai4bharat/conformer-en-gpu--t4'},
+    {'languageCode': 'hi', 'serviceId': 'ai4bharat/conformer-multilingual-indo_aryan-gpu--t4'},
+    {'languageCode': 'bn', 'serviceId': 'ai4bharat/conformer-multilingual-indo_aryan-gpu--t4'},
+    {'languageCode': 'gu', 'serviceId': 'ai4bharat/conformer-multilingual-indo_aryan-gpu--t4'},
+    {'languageCode': 'mr', 'serviceId': 'ai4bharat/conformer-multilingual-indo_aryan-gpu--t4'},
+    {'languageCode': 'or', 'serviceId': 'ai4bharat/conformer-multilingual-indo_aryan-gpu--t4'},
+    {'languageCode': 'pa', 'serviceId': 'ai4bharat/conformer-multilingual-indo_aryan-gpu--t4'},
+    {'languageCode': 'kn', 'serviceId': 'ai4bharat/conformer-multilingual-dravidian-gpu--t4'},
+    {'languageCode': 'ml', 'serviceId': 'ai4bharat/conformer-multilingual-dravidian-gpu--t4'},
+    {'languageCode': 'ta', 'serviceId': 'ai4bharat/conformer-multilingual-dravidian-gpu--t4'},
+    {'languageCode': 'te', 'serviceId': 'ai4bharat/conformer-multilingual-dravidian-gpu--t4'},
+  ];
+
+  static final TTS_SERVICE_ID_MAP = [
+    {'languageCode': 'en', 'serviceId': 'ai4bharat/indic-tts-coqui-misc-gpu--t4'},
+    {'languageCode': 'bn', 'serviceId': 'ai4bharat/indic-tts-coqui-indo_aryan-gpu--t4'},
+    {'languageCode': 'gu', 'serviceId': 'ai4bharat/indic-tts-coqui-indo_aryan-gpu--t4'},
+    {'languageCode': 'hi', 'serviceId': 'ai4bharat/indic-tts-coqui-indo_aryan-gpu--t4'},
+    {'languageCode': 'mr', 'serviceId': 'ai4bharat/indic-tts-coqui-indo_aryan-gpu--t4'},
+    {'languageCode': 'or', 'serviceId': 'ai4bharat/indic-tts-coqui-indo_aryan-gpu--t4'},
+    {'languageCode': 'pa', 'serviceId': 'ai4bharat/indic-tts-coqui-indo_aryan-gpu--t4'},
+    {'languageCode': 'kn', 'serviceId': 'ai4bharat/indic-tts-coqui-dravidian-gpu--t4'},
+    {'languageCode': 'ml', 'serviceId': 'ai4bharat/indic-tts-coqui-dravidian-gpu--t4'},
+    {'languageCode': 'ta', 'serviceId': 'ai4bharat/indic-tts-coqui-dravidian-gpu--t4'},
+    {'languageCode': 'te', 'serviceId': 'ai4bharat/indic-tts-coqui-dravidian-gpu--t4'},
+  ];
+
   static final LANGUAGE_CODE_MAP = {
     'language_codes': [
-      {'language_name': 'اردو', 'language_code': 'ur'},
-      {'language_name': 'ଓଡିଆ', 'language_code': 'or'},
-      {'language_name': 'தமிழ்', 'language_code': 'ta'},
-      {'language_name': 'हिन्दी', 'language_code': 'hi'},
-      {'language_name': 'डोगरी', 'language_code': 'doi'},
-      {'language_name': 'తెలుగు', 'language_code': 'te'},
-      {'language_name': 'नेपाली', 'language_code': 'ne'},
+      {'language_name': 'Tamil', 'language_code': 'ta'},
+      {'language_name': 'Hindi', 'language_code': 'hi'},
+      {'language_name': 'Telugu', 'language_code': 'te'},
       {'language_name': 'English', 'language_code': 'en'},
-      {'language_name': 'ਪੰਜਾਬੀ', 'language_code': 'pa'},
-      {'language_name': 'සිංහල', 'language_code': 'si'},
-      {'language_name': 'मराठी', 'language_code': 'mr'},
-      {'language_name': 'ಕನ್ನಡ', 'language_code': 'kn'},
-      {'language_name': 'বাংলা', 'language_code': 'bn'},
-      {'language_name': 'संस्कृत', 'language_code': 'sa'},
-      {'language_name': 'অসমীয়া', 'language_code': 'as'},
-      {'language_name': 'ગુજરાતી', 'language_code': 'gu'},
-      {'language_name': 'मैथिली', 'language_code': 'mai'},
-      {'language_name': 'भोजपुरी', 'language_code': 'bho'},
-      {'language_name': 'മലയാളം', 'language_code': 'ml'},
-      {'language_name': 'राजस्थानी', 'language_code': 'raj'},
-      {'language_name': 'Bodo', 'language_code': 'brx'},
-      {'language_name': 'মানিপুরি', 'language_code': 'mni'},
+      {'language_name': 'Punjabi', 'language_code': 'pa'},
+      {'language_name': 'Marathi', 'language_code': 'mr'},
+      {'language_name': 'Kannada', 'language_code': 'kn'},
+      {'language_name': 'Bengali', 'language_code': 'bn'},
+      {'language_name': 'Gujarati', 'language_code': 'gu'},
+      {'language_name': 'Malayalam', 'language_code': 'ml'},
+      {'language_name': 'Odia', 'language_code': 'or'},
     ]
   };
 
@@ -160,7 +182,16 @@ class AppConstants {
     TYPES_OF_MODELS_LIST[2]: 'AI4Bharat,',
   };
 
-  static final ASR_PAYLOAD_FORMAT = {'modelId': '', 'task': '', 'audioContent': '', 'source': '', 'userId': null};
+  // static final ASR_PAYLOAD_FORMAT = {'modelId': '', 'task': '', 'audioContent': '', 'source': '', 'userId': null};
+  static final ASR_PAYLOAD_FORMAT = {
+    "serviceId": "",
+    "audio": [
+      {"audioContent": ""}
+    ],
+    "config": {
+      "language": {"sourceLanguage": ""},
+    }
+  };
 
   static final TRANS_PAYLOAD_FORMAT = {
     'modelId': '',
@@ -181,16 +212,31 @@ class AppConstants {
     'userId': null
   };
 
-  static String getLanguageCodeOrName({required String value, required returnWhat, required Map<String, List<Map<String, String>>> lang_code_map}) {
+  static final S2S_PAYLOAD_FORMAT = {
+    "serviceId": "",
+    "audio": [
+      {"audioContent": ""}
+    ],
+    "config": {
+      "language": {"sourceLanguage": "", "targetLanguage": ""},
+      // "audioFormat": "string",
+      // "encoding": "string",
+      // "samplingRate": 0,
+      // "postProcessors": ["string"],
+      "gender": ""
+    }
+  };
+
+  static String getLanguageCodeOrName({required String value, required returnWhat}) {
     // If Language Code is to be returned that means the value received is a language name
     try {
       if (returnWhat == LANGUAGE_MAP.languageCode) {
-        var returningLangPair = lang_code_map['language_codes']!
+        var returningLangPair = LANGUAGE_CODE_MAP['language_codes']!
             .firstWhere((eachLanguageCodeNamePair) => eachLanguageCodeNamePair['language_name']!.toLowerCase() == value.toLowerCase());
         return returningLangPair['language_code'] ?? 'No Language Code Found';
       }
 
-      var returningLangPair = lang_code_map['language_codes']!
+      var returningLangPair = LANGUAGE_CODE_MAP['language_codes']!
           .firstWhere((eachLanguageCodeNamePair) => eachLanguageCodeNamePair['language_code']!.toLowerCase() == value.toLowerCase());
       return returningLangPair['language_name'] ?? 'No Language Name Found';
     } catch (e) {

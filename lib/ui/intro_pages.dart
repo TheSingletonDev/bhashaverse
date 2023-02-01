@@ -205,7 +205,7 @@ class IntroPagesState extends State<IntroPages> {
               height: 0.045.sh,
               child: Padding(
                 padding: EdgeInsets.only(top: 5.h),
-                child: const LangSwitchButton(),
+                // child: const LangSwitchButton(),
               ),
             ),
           ),
