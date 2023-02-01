@@ -83,10 +83,10 @@ class SpeechToSpeechController extends GetxController {
         await _hardwareRequestsController.requestPermissions();
         String appDocPath = await _hardwareRequestsController.getAppDirPath();
 
-        _asrResponseText = asrOutputString;
+        _asrResponseText = responseList[0]['output']['output'][0]['source'];
         _appUIController.changeIsASRResponseGenerated(isASRResponseGenerated: true);
 
-        _transResponseText = transOutputString;
+        _transResponseText = responseList[0]['output']['output'][0]['target'];
         _appUIController.changeIsTransResponseGenerated(isTransResponseGenerated: true);
 
         if (s2sMaleAudioBase64String.isNotEmpty) {
