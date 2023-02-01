@@ -3,17 +3,14 @@ import 'package:get/get.dart';
 
 import '../config/app_constants.dart';
 import '../data/models/search_model.dart';
-import '../data/translation_app_api_client.dart';
 import 'app_ui_controller.dart';
 
 class LanguageModelController extends GetxController {
-  late TranslationAppAPIClient _translationAppAPIClient;
   late AppUIController _appUIController;
 
   @override
   void onInit() {
     super.onInit();
-    _translationAppAPIClient = Get.find();
     _appUIController = Get.find();
 
     /*If the below method is called here in OnInit,

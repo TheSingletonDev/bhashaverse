@@ -10,7 +10,6 @@ import '../config/loacale_fonts.dart';
 import '../config/size_config.dart';
 import 'home_page.dart';
 import 'widgets/info_btn.dart';
-import 'widgets/localization_btn.dart';
 // import 'home_screen.dart';
 
 class IntroPages extends StatefulWidget {

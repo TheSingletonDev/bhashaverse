@@ -10,11 +10,10 @@ class HardwareRequestsController extends GetxController {
 
   Future requestPermissions() async {
     final micResStatus = await Permission.microphone.request();
-    final storageResStatus = await Permission.storage.request();
+    // final storageResStatus = await Permission.storage.request();
 
-    if (micResStatus == PermissionStatus.granted && storageResStatus == PermissionStatus.granted) {
+    if (micResStatus == PermissionStatus.granted) {
       // throw RecordingPermissionException('Microphone and Storage permission not granted!');
-      print('Coming here too');
 
       _arePermissionsGranted = true;
     }

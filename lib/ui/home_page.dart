@@ -14,7 +14,6 @@ import '../controllers/recorder_controller.dart';
 import '../controllers/speech_to_speech_controller.dart';
 import 'widgets/horizontal_divider.dart';
 import 'widgets/info_btn.dart';
-import 'widgets/localization_btn.dart';
 import 'widgets/snackbar.dart';
 
 class HomePage extends StatelessWidget {

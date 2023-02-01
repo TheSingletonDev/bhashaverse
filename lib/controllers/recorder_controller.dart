@@ -39,7 +39,6 @@ class RecorderController extends GetxController {
       _appUIController.changeIsTTSResponseFileGenerated(isTTSResponseFileGenerated: false);
 
       await _hardwareRequestsController.requestPermissions();
-      print('Coming here');
 
       if (_hardwareRequestsController.arePermissionsGranted) {
         _appUIController.changeCurrentRequestStatusForUI(newStatus: AppConstants.USER_VOICE_RECORDING_STATUS_MSG.tr);
