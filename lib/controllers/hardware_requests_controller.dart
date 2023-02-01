@@ -14,6 +14,8 @@ class HardwareRequestsController extends GetxController {
 
     if (micResStatus == PermissionStatus.granted && storageResStatus == PermissionStatus.granted) {
       // throw RecordingPermissionException('Microphone and Storage permission not granted!');
+      print('Coming here too');
+
       _arePermissionsGranted = true;
     }
   }
