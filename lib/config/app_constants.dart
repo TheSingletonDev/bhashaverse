@@ -39,7 +39,7 @@ class AppConstants {
   static const String ASR_REQ_URL = '/services/inference/asr';
   static const String TRANS_REQ_URL = '/v0/model/compute';
   static const String TTS_REQ_URL = '/v0/model/compute';
-  static const String S2S_REQ_URL = '/services/inference/s22s';
+  static const String S2S_REQ_URL = '/services/inference/s2s';
 
   static const String IMAGE_ASSETS_PATH = 'assets/images/';
 
