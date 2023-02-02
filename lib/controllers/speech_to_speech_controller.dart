@@ -141,7 +141,7 @@ class SpeechToSpeechController extends GetxController {
           _appUIController.changeIsTTSResponseFileGenerated(isTTSResponseFileGenerated: false);
         }
       }
-    } on Exception {
+    } catch (err) {
       _appUIController.changeHasSpeechToSpeechRequestsInitiated(hasSpeechToSpeechRequestsInitiated: false);
       _appUIController.changeHasSpeechToSpeechUpdateRequestsInitiated(hasSpeechToSpeechUpdateRequestsInitiated: false); //Only for Update Button
       _appUIController.changeHasS2SRequestInitiated(hasS2SRequestInitiated: false);
