@@ -43,6 +43,8 @@ class SpeechToSpeechController extends GetxController {
 
   Future _getS2SOutputForBothGender({required String base64AudioContent}) async {
     try {
+      Stopwatch watch = Stopwatch();
+      watch.start();
       _appUIController.changeHasSpeechToSpeechRequestsInitiated(hasSpeechToSpeechRequestsInitiated: true);
       _appUIController.changeHasS2SRequestInitiated(hasS2SRequestInitiated: true);
 
@@ -140,6 +142,9 @@ class SpeechToSpeechController extends GetxController {
         } else {
           _appUIController.changeIsTTSResponseFileGenerated(isTTSResponseFileGenerated: false);
         }
+        _appUIController.changeCurrentRequestStatusForUI(
+            newStatus:
+                'S2S for ${_appUIController.selectedSourceLangNameInUI}-${_appUIController.selectedTargetLangNameInUI} completed in ${(watch.elapsedMilliseconds / 1000).toPrecision(2)} seconds!');
       }
     } catch (err) {
       _appUIController.changeHasSpeechToSpeechRequestsInitiated(hasSpeechToSpeechRequestsInitiated: false);
