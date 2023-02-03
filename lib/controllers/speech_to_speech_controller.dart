@@ -59,37 +59,61 @@ class SpeechToSpeechController extends GetxController {
               .replaceFirst('%replaceContent%', '${_appUIController.selectedSourceLangNameInUI}-${_appUIController.selectedTargetLangNameInUI}'));
 
       //Below two lines so that any changes are made to a new map, not the original format
-      // var s2sPayloadToSendForMale = {};
-      Map<String, dynamic> s2sPayloadToSendForMale = {
-        "serviceId": "",
-        "audio": [
-          {"audioContent": ""}
-        ],
-        "config": {
-          "language": {"sourceLanguage": "", "targetLanguage": ""},
-          "gender": "male"
-        }
-      };
-      Map<String, dynamic> s2sPayloadToSendForFemale = {
-        "serviceId": "",
-        "audio": [
-          {"audioContent": ""}
-        ],
-        "config": {
-          "language": {"sourceLanguage": "", "targetLanguage": ""},
-          "gender": "female"
-        }
-      };
+      var s2sPayloadToSendForMale = {};
+      var s2sPayloadToSendForFemale = {};
+
+      s2sPayloadToSendForMale.addAll(AppConstants.S2S_PAYLOAD_FORMAT);
+      s2sPayloadToSendForFemale.addAll(AppConstants.S2S_PAYLOAD_FORMAT);
+
+      print(s2sPayloadToSendForMale);
+      print(s2sPayloadToSendForFemale);
 
       s2sPayloadToSendForMale['serviceId'] = '';
-      s2sPayloadToSendForMale['audio'][0]['audioContent'] = base64AudioContent;
+      s2sPayloadToSendForMale['audio'][0]['audioContent'] = 'base64AudioContent';
       s2sPayloadToSendForMale['config']['language']['sourceLanguage'] = selectedSourceLangCodeInUI;
       s2sPayloadToSendForMale['config']['language']['targetLanguage'] = selectedTargetLangCodeInUI;
+      s2sPayloadToSendForMale['config']['gender'] = 'male';
+      print(s2sPayloadToSendForMale);
 
       s2sPayloadToSendForFemale['serviceId'] = '';
-      s2sPayloadToSendForFemale['audio'][0]['audioContent'] = base64AudioContent;
+      s2sPayloadToSendForFemale['audio'][0]['audioContent'] = 'base64AudioContent';
       s2sPayloadToSendForFemale['config']['language']['sourceLanguage'] = selectedSourceLangCodeInUI;
       s2sPayloadToSendForFemale['config']['language']['targetLanguage'] = selectedTargetLangCodeInUI;
+      s2sPayloadToSendForFemale['config']['gender'] = 'female';
+
+      print(s2sPayloadToSendForMale);
+      print(s2sPayloadToSendForFemale);
+
+      // Map<String, dynamic> s2sPayloadToSendForMale = {
+      //   "serviceId": "",
+      //   "audio": [
+      //     {"audioContent": ""}
+      //   ],
+      //   "config": {
+      //     "language": {"sourceLanguage": "", "targetLanguage": ""},
+      //     "gender": "male"
+      //   }
+      // };
+      // Map<String, dynamic> s2sPayloadToSendForFemale = {
+      //   "serviceId": "",
+      //   "audio": [
+      //     {"audioContent": ""}
+      //   ],
+      //   "config": {
+      //     "language": {"sourceLanguage": "", "targetLanguage": ""},
+      //     "gender": "female"
+      //   }
+      // };
+
+      // s2sPayloadToSendForMale['serviceId'] = '';
+      // s2sPayloadToSendForMale['audio'][0]['audioContent'] = base64AudioContent;
+      // s2sPayloadToSendForMale['config']['language']['sourceLanguage'] = selectedSourceLangCodeInUI;
+      // s2sPayloadToSendForMale['config']['language']['targetLanguage'] = selectedTargetLangCodeInUI;
+
+      // s2sPayloadToSendForFemale['serviceId'] = '';
+      // s2sPayloadToSendForFemale['audio'][0]['audioContent'] = base64AudioContent;
+      // s2sPayloadToSendForFemale['config']['language']['sourceLanguage'] = selectedSourceLangCodeInUI;
+      // s2sPayloadToSendForFemale['config']['language']['targetLanguage'] = selectedTargetLangCodeInUI;
 
       List<Map<String, dynamic>> responseList =
           await _translationAppAPIClient.sendS2SReqForBothGender(s2sPayloadList: [s2sPayloadToSendForMale, s2sPayloadToSendForFemale]);
@@ -147,6 +171,7 @@ class SpeechToSpeechController extends GetxController {
                 'S2S for ${_appUIController.selectedSourceLangNameInUI}-${_appUIController.selectedTargetLangNameInUI} completed in ${(watch.elapsedMilliseconds / 1000).toPrecision(2)} seconds!');
       }
     } catch (err) {
+      print(err);
       _appUIController.changeHasSpeechToSpeechRequestsInitiated(hasSpeechToSpeechRequestsInitiated: false);
       _appUIController.changeHasSpeechToSpeechUpdateRequestsInitiated(hasSpeechToSpeechUpdateRequestsInitiated: false); //Only for Update Button
       _appUIController.changeHasS2SRequestInitiated(hasS2SRequestInitiated: false);

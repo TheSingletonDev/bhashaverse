@@ -212,7 +212,7 @@ class AppConstants {
     'userId': null
   };
 
-  static final S2S_PAYLOAD_FORMAT = {
+  static const S2S_PAYLOAD_FORMAT = {
     "serviceId": "",
     "audio": [
       {"audioContent": ""}
