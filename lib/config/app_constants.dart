@@ -197,4 +197,21 @@ class AppConstants {
       return 'No Return Value Found';
     }
   }
+
+  /*Used for deep copying original map to a new map. If not, dart will shallow copy where Objects are passed by referenced
+  which will change the original value even if changes are made to the copied value.
+  */
+  static Map<String, dynamic> deepCopyMap(Map<String, dynamic> original) {
+    Map<String, dynamic> copy = {};
+    original.forEach((key, value) {
+      if (value is Map<String, dynamic>) {
+        copy[key] = deepCopyMap(value);
+      } else if (value is List) {
+        copy[key] = value.map((e) => e is Map<String, dynamic> ? deepCopyMap(e) : e).toList();
+      } else {
+        copy[key] = value;
+      }
+    });
+    return copy;
+  }
 }
