@@ -49,6 +49,8 @@ class SpeechToSpeechController extends GetxController {
 
   Future _sendSpeechToSpeechRequestsInternal({required String base64AudioContent}) async {
     try {
+      Stopwatch watch = Stopwatch();
+      watch.start();
       _appUIController.changeHasSpeechToSpeechRequestsInitiated(hasSpeechToSpeechRequestsInitiated: true);
       _appUIController.changeCurrentRequestStatusForUI(
           newStatus: AppConstants.SPEECH_RECG_REQ_STATUS_MSG.tr.replaceFirst('%replaceContent%', _appUIController.selectedSourceLangNameInUI));
@@ -157,6 +159,9 @@ class SpeechToSpeechController extends GetxController {
         _appUIController.changeCurrentRequestStatusForUI(
             newStatus: AppConstants.TTS_FAIL_STATUS_MSG.tr.replaceFirst('%replaceContent%', _appUIController.selectedTargetLangNameInUI));
       }
+      _appUIController.changeCurrentRequestStatusForUI(
+          newStatus:
+              'S2S for ${_appUIController.selectedSourceLangNameInUI}-${_appUIController.selectedTargetLangNameInUI} completed in ${(watch.elapsedMilliseconds / 1000).toPrecision(2)} seconds!');
     } on Exception {
       _appUIController.changeHasSpeechToSpeechRequestsInitiated(hasSpeechToSpeechRequestsInitiated: false);
       _appUIController.changeHasSpeechToSpeechUpdateRequestsInitiated(hasSpeechToSpeechUpdateRequestsInitiated: false); //Only for Update Button
