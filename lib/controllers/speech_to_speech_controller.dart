@@ -70,9 +70,6 @@ class SpeechToSpeechController extends GetxController {
       _appUIController.changeCurrentRequestStatusForUI(
           newStatus: AppConstants.SPEECH_RECG_SUCCESS_STATUS_MSG.tr.replaceFirst('%replaceContent%', _appUIController.selectedSourceLangNameInUI));
 
-      //Simulated delay of xx seconds for UX
-      await Future.delayed(const Duration(seconds: 1));
-
       _appUIController.changeCurrentRequestStatusForUI(
           newStatus: AppConstants.SEND_TRANS_REQ_STATUS_MSG.tr
               .toString()
@@ -96,8 +93,6 @@ class SpeechToSpeechController extends GetxController {
               .toString()
               .replaceFirst('%replaceContent1%', _appUIController.selectedSourceLangNameInUI)
               .replaceFirst('%replaceContent2%', _appUIController.selectedTargetLangNameInUI));
-
-      await Future.delayed(const Duration(seconds: 1));
 
       _appUIController.changeCurrentRequestStatusForUI(
           newStatus: AppConstants.SEND_TTS_REQ_STATUS_MSG.tr.replaceFirst('%replaceContent%', _appUIController.selectedTargetLangNameInUI));
