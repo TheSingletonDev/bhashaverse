@@ -50,6 +50,7 @@ class SpeechToSpeechController extends GetxController {
   Future _sendSpeechToSpeechRequestsInternal({required String base64AudioContent}) async {
     try {
       Stopwatch watch = Stopwatch();
+
       watch.start();
       _appUIController.changeHasSpeechToSpeechRequestsInitiated(hasSpeechToSpeechRequestsInitiated: true);
       _appUIController.changeCurrentRequestStatusForUI(
