@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import '../config/app_constants.dart';
 import 'models/search_model.dart';
@@ -48,6 +50,45 @@ class TranslationAppAPIClient {
       return asrTranslationTTSResponsesList;
     } catch (e) {
       return [];
+    }
+  }
+
+  Future<dynamic> sendULCAConfigRequest({required configPayload}) async {
+    try {
+      var response = await _dio.post(AppConstants.CONFIG_REQ_URL,
+          data: configPayload,
+          options: Options(headers: {
+            'Content-Type': 'application/json',
+            'Accept': '*/*',
+            'ulcaApiKey': const String.fromEnvironment('ULCA_API_KEY'),
+            'userID': const String.fromEnvironment('ULCA_USER_ID'),
+          }));
+      if (response.statusCode == 200) {
+        return response.data;
+      }
+      return {};
+    } catch (e) {
+      return {};
+    }
+  }
+
+  Future<dynamic> sendPipelineComputeRequest(
+      {required computeURL, required computeAPIKeyName, required computeAPIKeyValue, required computePayload}) async {
+    try {
+      Dio dio = Dio(BaseOptions(connectTimeout: 80000, receiveTimeout: 50000, validateStatus: (status) => true));
+      var response = await dio.post(computeURL,
+          data: computePayload,
+          options: Options(headers: {
+            'Content-Type': 'application/json',
+            'Accept': '*/*',
+            computeAPIKeyName: computeAPIKeyValue,
+          }));
+      if (response.statusCode == 200) {
+        return response.data;
+      }
+      return {};
+    } catch (e) {
+      return {};
     }
   }
 

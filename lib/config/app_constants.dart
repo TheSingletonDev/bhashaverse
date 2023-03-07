@@ -33,12 +33,13 @@ class AppConstants {
 
   static const String ASR_CALLBACK_AZURE_URL = 'https://meity-dev-asr.ulcacontrib.org/asr/v1/recognize';
   static const String ASR_CALLBACK_CDAC_URL = 'https://cdac.ulcacontrib.org/asr/v1/recognize';
-  static const String STS_BASE_URL = 'https://meity-auth.ulcacontrib.org/ulca/apis';
+  static const String STS_BASE_URL = 'https://dev-auth.ulcacontrib.org/ulca/apis';
 
   static const String SEARCH_REQ_URL = '/v0/model/search';
   static const String ASR_REQ_URL = '/asr/v1/model/compute';
   static const String TRANS_REQ_URL = '/v0/model/compute';
   static const String TTS_REQ_URL = '/v0/model/compute';
+  static const String CONFIG_REQ_URL = '/v0/model/getModelsPipeline';
 
   static const String IMAGE_ASSETS_PATH = 'assets/images/';
 
@@ -179,6 +180,49 @@ class AppConstants {
     ],
     'gender': '',
     'userId': null
+  };
+
+  static final ULCA_CONFIG_PAYLOAD_FORMAT = {
+    "pipelineTasks": [
+      {"taskType": "asr"},
+      {"taskType": "translation"},
+      {"taskType": "tts"}
+    ],
+    "pipelineRequestConfig": {"submitter": "AI4Bharat"}
+  };
+
+  static final STS_PAYLOAD_FORMAT = {
+    "pipelineTasks": [
+      {
+        "serviceId": "",
+        "taskType": "asr",
+        "config": {
+          "language": {"sourceLanguage": ""},
+          "audioFormat": "wav",
+          "samplingRate": 16000
+        }
+      },
+      {
+        "serviceId": "",
+        "taskType": "translation",
+        "config": {
+          "language": {"sourceLanguage": "hi", "targetLanguage": ""}
+        }
+      },
+      {
+        "serviceId": "",
+        "taskType": "tts",
+        "config": {
+          "language": {"sourceLanguage": ""},
+          "gender": "male"
+        }
+      }
+    ],
+    "inputData": {
+      "audio": [
+        {"audioContent": ""}
+      ]
+    }
   };
 
   static String getLanguageCodeOrName({required String value, required returnWhat, required Map<String, List<Map<String, String>>> lang_code_map}) {

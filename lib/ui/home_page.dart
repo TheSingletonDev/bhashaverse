@@ -25,7 +25,8 @@ class HomePage extends StatelessWidget {
     if (!GetStorage().read('isIntroShown')) {
       GetStorage().write('isIntroShown', true);
     }
-    Get.find<LanguageModelController>().calcAvailableSourceAndTargetLanguages();
+    // Get.find<LanguageModelController>().calcAvailableSourceAndTargetLanguages();
+    Get.find<LanguageModelController>().fetchULCAConfig();
     return SafeArea(
       child: Scaffold(
         backgroundColor: AppConstants.STANDARD_WHITE,
